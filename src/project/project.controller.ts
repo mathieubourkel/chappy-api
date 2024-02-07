@@ -7,23 +7,25 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 // import { UpdateProjectDto } from './dto/update-project.dto';
-import {
-  ProjectDocument
-} from './project.schema';
+import { ProjectDocument } from './project.schema';
 
 @Controller('project')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
-  @Post()
+  @Post('/')
   async create(
-    @Body(new ValidationPipe())
-    body: CreateProjectDto) :Promise<ProjectDocument> {
-      return  this.projectService.create(body)
+    @Body(new ValidationPipe()) body: CreateProjectDto) :Promise<ProjectDocument> {
+    try {
+      return await this.projectService.create(body)
+    } catch (e) {
+      throw new InternalServerErrorException(e)
+    }
   }
 
   // @Get()
