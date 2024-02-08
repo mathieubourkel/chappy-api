@@ -5,13 +5,15 @@ import * as process from 'process';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProjectModule } from './project/project.module';
+import { StepModule } from './step/step.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true,} ),
     MongooseModule.forRoot(  `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PWD}@${process.env.MONGO_DNS}`,
                              {dbName : "db-chappy-main"}),
-    ProjectModule
+    ProjectModule,
+    StepModule
   ],
   controllers: [AppController],
   providers: [AppService],

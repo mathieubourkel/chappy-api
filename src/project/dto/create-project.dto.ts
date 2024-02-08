@@ -1,4 +1,12 @@
-import { IsDateString, IsInt, IsString, Length, Max } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsInt,
+  IsString,
+  Length,
+  Max,
+} from 'class-validator';
+import { StatusEnum } from '../../step/enum/status.enum';
 
 export class CreateProjectDto {
   @IsString()
@@ -17,9 +25,9 @@ export class CreateProjectDto {
   @Length(1, 16)
   code:string;
 
-  @IsInt()
+  @IsEnum(StatusEnum)
   @Max(3)
-  status:number;
+  status:StatusEnum;
 
   @IsInt()
   globalBudget:number;
