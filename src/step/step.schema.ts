@@ -23,7 +23,7 @@ export class Step {
   estimEndDate : Date;
 
   @Prop({ type: Types.ObjectId, ref: 'Project' })
-  project: Project | Types.ObjectId
+  project: Project | Types.ObjectId;
 
   @Prop()
   taskIds: []
