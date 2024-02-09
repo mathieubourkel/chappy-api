@@ -60,7 +60,7 @@ export class TaskController {
   @Get('/tasks/step/:idStep')
   async findTasksByIdStep( @Param('idStep') idStep: string): Promise<TaskDocument[]> {
     try {
-      return await this.taskService.getTasksByIdProject(idStep);
+      return await this.taskService.getTasksByIdStep(idStep);
     } catch (error) {
       _catchEx(error)
     }

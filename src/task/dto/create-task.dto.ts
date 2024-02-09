@@ -17,6 +17,10 @@ export class CreateTaskDto {
   name:string;
 
   @IsString()
+  @Length(1, 50)
+  owner: string;
+
+  @IsString()
   @Length(1, 250)
   description:string;
 
