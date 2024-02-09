@@ -7,6 +7,7 @@ import { StatusEnum } from './enum/status.enum';
 import { Types } from 'mongoose';
 import { Project } from '../project/project.schema';
 import { CategoryEnum } from './enum/category.enum';
+import { Step } from '../step/step.schema';
 
 export type TaskDocument = Task & Document;
 
@@ -18,6 +19,9 @@ export class Task {
   @Prop({required:true})
   description: string;
 
+  @Prop({required:true})
+  owner: string;
+
   @Prop({type: ()=> StatusEnum, required:true, default: StatusEnum.IN_PROGRESS })
   status: StatusEnum;
 
@@ -28,16 +32,19 @@ export class Task {
   budget: number;
 
   @Prop({required:true})
-  StartDate : Date;
+  startDate : Date;
 
   @Prop({required:true})
-  ExpiryDate : Date;
+  expiryDate : Date;
 
   @Prop({ type: Types.ObjectId, ref: 'Project' })
   project: Project | Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'Step' })
+  step: Step | Types.ObjectId;
+
   @Prop()
-  stepIds: []
+  members: string[];
 
 }
 

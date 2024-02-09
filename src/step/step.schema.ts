@@ -2,6 +2,7 @@ import { Project } from '../project/project.schema';
 import { Prop, Schema, SchemaFactory, } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { StatusEnum } from './enum/status.enum';
+import { Task } from '../task/task.schema';
 
 export type StepDocument = Step & Document;
 
@@ -25,8 +26,8 @@ export class Step {
   @Prop({ type: Types.ObjectId, ref: 'Project' })
   project: Project | Types.ObjectId;
 
-  @Prop()
-  taskIds: []
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Task' }] })
+  tasks: Task[] | Types.ObjectId[];
 
 }
 
