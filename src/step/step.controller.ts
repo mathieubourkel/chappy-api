@@ -12,7 +12,10 @@ import { StepService } from './step.service';
 import { CreateStepDto } from './dto/create-step.dto';
 import { UpdateStepDto } from './dto/update-step.dto';
 import { StepDocument } from './step.schema';
-import { _catchEx } from '../../exceptions/RcpExceptionFormated';
+import {
+  _catchEx,
+  _Ex,
+} from '../../exceptions/RcpExceptionFormated';
 
 
 @Controller('step')
@@ -22,7 +25,9 @@ export class StepController {
   @Post('/')
   async create(@Body(new ValidationPipe()) body: CreateStepDto) : Promise<StepDocument> {
     try {
-      return await this.stepService.create(body)
+      const step:StepDocument = await this.stepService.create(body);
+      if (!step) _Ex("STEP CREATION FAILED", 400, "SC-BUILD-FAILED", "/" )
+      return step;
     } catch (error) {
       _catchEx(error)
     }
@@ -31,7 +36,9 @@ export class StepController {
   @Get('/:id')
   async findStepById(@Param('id') id: string): Promise<StepDocument> {
     try {
-      return await this.stepService.getStepById(id);
+      const step:StepDocument = await this.stepService.getStepById(id);
+      if (!step) _Ex("STEP DON'T EXIST", 404, "PS-NO-EXIST", "/" )
+      return step;
     } catch (error) {
       _catchEx(error)
     }
@@ -40,7 +47,9 @@ export class StepController {
   @Patch('/:id')
   async update(@Param('id') id: string, @Body() body: UpdateStepDto): Promise<Partial<StepDocument>> {
     try {
-      return await this.stepService.update(id, body);
+      const step:Partial<StepDocument> = await this.stepService.update(id, body);
+      if (!step) _Ex("UPDATE FAILED", 400, "SC-STEP-NOTUP", "/" )
+      return step;
     } catch (error) {
       _catchEx(error)
     }
@@ -48,7 +57,9 @@ export class StepController {
 
   @Delete('/:id')
   delete(@Param('id') id: string):Promise<StepDocument> {
-    return this.stepService.delete(id);
+    const step:Promise<StepDocument> = this.stepService.delete(id);
+    if (!step) _Ex("DELETE FAILED", 403, "SC-NO-DELETE", "/" );
+    return step;
   }
 }
 

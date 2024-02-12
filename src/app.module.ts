@@ -16,8 +16,6 @@ import { TaskModule } from './task/task.module';
     ProjectModule,
     StepModule,
     TaskModule
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+  ]
 })
 export class AppModule {}

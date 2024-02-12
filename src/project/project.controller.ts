@@ -23,7 +23,9 @@ export class ProjectController {
   async create(
     @Body(new ValidationPipe()) body: CreateProjectDto) :Promise<ProjectDocument> {
     try {
-      return await this.projectService.create(body)
+      const project:ProjectDocument = await this.projectService.create(body);
+      if (!project) _Ex("PROJECT CREATION FAILED", 400, "PC-BUILD-FAILED", "/" )
+      return project;
     } catch (error) {
       _catchEx(error)
     }
@@ -32,7 +34,9 @@ export class ProjectController {
   @Get('/project/:id')
   async findProjectById(@Param('id') id: string): Promise<ProjectDocument> {
     try {
-      return await this.projectService.getProjectById(id);
+      const project:ProjectDocument = await this.projectService.getProjectById(id);
+      if (!project) _Ex("PROJECT DON'T EXIST", 404, "PC-NO-EXIST", "/" )
+      return project;
     } catch (error) {
       _catchEx(error)
     }
@@ -41,9 +45,11 @@ export class ProjectController {
   @Get('/my-projects')
   async findProjectsByOwner(@Body() requestBody: { userId: string }): Promise<ProjectDocument[]> {
     try {
-      const userId = requestBody.userId;
+      const userId:string = requestBody.userId;
       if (!userId) _Ex("USER DON'T EXIST", 404, "USER-NO-EXIST", "/" )
-      return await this.projectService.getProjectsByUser(userId);
+      const projects:ProjectDocument[] =  await this.projectService.getProjectsByUser(userId);
+      if (!projects || projects.length === 0) _Ex("PROJECTS DON'T EXIST", 404, "PC-NO-EXIST", "/" )
+      return projects;
     } catch (error) {
       _catchEx(error)
     }
@@ -52,7 +58,9 @@ export class ProjectController {
   @Patch('/project/:id')
   async update(@Param('id') id: string, @Body() body: UpdateProjectDto):Promise<Partial<ProjectDocument>> {
     try {
-      return await this.projectService.update(id, body);
+      const project:Partial<ProjectDocument> = await this.projectService.update(id, body);
+      if (!project) _Ex("UPDATE FAILED", 400, "PC-PROJ-NOTUP", "/" )
+      return project;
     } catch (error) {
       _catchEx(error)
     }
@@ -60,6 +68,8 @@ export class ProjectController {
 
   @Delete('/project/:id')
   delete(@Param('id') id: string):Promise<ProjectDocument> {
-    return this.projectService.delete(id);
+    const project:Promise<ProjectDocument> = this.projectService.delete(id);
+    if (!project) _Ex("DELETE FAILED", 403, "PC-NO-DELETE", "/" );
+    return project;
   }
 }

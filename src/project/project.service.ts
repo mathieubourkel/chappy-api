@@ -21,7 +21,6 @@ export class ProjectService {
   async create(body: CreateProjectDto):Promise<ProjectDocument> {
     try {
       const project = new this.projectModel(body);
-        if (!project) _Ex("PROJECT CREATION FAILED", 400, "PC-BUILD-FAILED", "/" )
       return await project.save();
     } catch (error) {
       _catchEx(error)
@@ -30,9 +29,7 @@ export class ProjectService {
 
   async getProjectById(_id: string): Promise<ProjectDocument> {
     try {
-      const project = await this.projectModel.findOne({ _id });
-        if (!project) _Ex("PROJECT DON'T EXIST", 404, "PC-NO-EXIST", "/" )
-      return project;
+      return await this.projectModel.findOne({ _id });
     } catch (error) {
       _catchEx(error)
     }
@@ -40,9 +37,7 @@ export class ProjectService {
 
   async getProjectsByUser(id: string): Promise<ProjectDocument[]> {
     try {
-      const projects = await this.projectModel.find({owner: id});
-      if (!projects || projects.length === 0) _Ex("PROJECTS DON'T EXIST", 404, "PC-NO-EXIST", "/" )
-      return projects;
+      return await this.projectModel.find({owner: id});
     } catch (error) {
       _catchEx(error)
     }
@@ -50,9 +45,8 @@ export class ProjectService {
 
   async update(_id: string, body: UpdateProjectDto): Promise<Partial<ProjectDocument>> {
     try {
-      const project = await this.projectModel.findOneAndUpdate({ _id }, body, {new : true});
-        if (!project) _Ex("UPDATE FAILED", 400, "PC-PROJ-NOTUP", "/" )
-      return project
+      // @ts-ignore
+      return await this.projectModel.findOneAndUpdate({ _id }, body, {new : true});
     } catch (error) {
       _catchEx(error)
     }
@@ -60,9 +54,7 @@ export class ProjectService {
 
   async delete(_id: string):Promise<ProjectDocument> {
     try {
-      const project = await this.projectModel.findOneAndDelete({ _id });
-        if (!project) _Ex("DELETE FAILED", 403, "PC-NO-DELETE", "/" );
-      return project;
+      return await this.projectModel.findOneAndDelete({ _id });
     } catch (error) {
       _catchEx(error)
     }
