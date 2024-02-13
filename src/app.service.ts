@@ -1,8 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
-  }
+
+  @Client({
+    transport: Transport.NATS,
+    options: {
+      url: `nats://${process.env.NATS_HOST}:${process.env.NATS_PORT}`,
+    }
+  })
+  client: ClientProxy;
+
 }

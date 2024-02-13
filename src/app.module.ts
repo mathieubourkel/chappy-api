@@ -5,6 +5,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProjectModule } from './project/project.module';
 import { StepModule } from './step/step.module';
 import { TaskModule } from './task/task.module';
+import { AppService } from './app.service';
+import { msCommentController } from './ms-comment.controller';
+import { msComptaController } from './ms-compta.controller';
+import { msLogController } from './ms-log.controller';
+import { msAuthController } from './ms-auth.controller';
+import { msMediaController } from './ms-media.controller';
 
 @Module({
   imports: [
@@ -14,6 +20,9 @@ import { TaskModule } from './task/task.module';
     ProjectModule,
     StepModule,
     TaskModule
-  ]
+  ],
+  controllers:[msCommentController, msComptaController, msLogController, msAuthController, msMediaController],
+  providers: [AppService],
+  exports : [AppService]
 })
 export class AppModule {}
