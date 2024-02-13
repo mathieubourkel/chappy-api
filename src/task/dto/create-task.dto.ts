@@ -6,9 +6,7 @@ import {
 } from 'class-validator';
 import { Types } from 'mongoose';
 import { StatusEnum } from '../enum/status.enum';
-import {
-  CategoryEnum
-} from '../enum/category.enum';
+import { CategoryEnum } from '../enum/category.enum';
 
 export class CreateTaskDto {
 
