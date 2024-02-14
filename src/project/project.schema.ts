@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { StatusEnum } from './enum/status.enum';
 import { Step } from '../step/step.schema';
 import { Task } from '../task/task.schema';
+import { IsString } from 'class-validator';
 
 export type ProjectDocument = Project & Document;
 
@@ -14,7 +15,8 @@ export class Project {
   @Prop({required:true})
   description: string;
 
-  @Prop({required:true})
+  @Prop({required:true,})
+  @IsString()
   owner: string;
 
   @Prop({required:true})
