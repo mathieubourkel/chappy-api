@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Delete, UseFilters, HttpException, HttpStatus } from '@nestjs/common';
 import { BaseUtils } from 'libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
 
@@ -30,9 +30,10 @@ export class ComptaController extends BaseUtils {
   @Put(":id")
   async updateCompta(@Param('id') id:string, @Body() body:any):Promise<unknown> {
     try {
-        return await this.uberService.send('PUT_COMPTA', {id, body})
+        const result = await this.uberService.send('PUT_COMPTA', {id, body})
+        return result;
     } catch (error) {
-        this._catchEx(error)
+      throw error
     }
   }
 
