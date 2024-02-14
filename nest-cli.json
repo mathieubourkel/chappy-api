@@ -3,6 +3,18 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true
+  },
+  "projects": {
+    "uber": {
+      "type": "library",
+      "root": "libs/uber",
+      "entryFile": "index",
+      "sourceRoot": "libs/uber/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/uber/tsconfig.lib.json"
+      }
+    }
   }
 }

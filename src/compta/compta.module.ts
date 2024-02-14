@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ComptaService } from './compta.service';
 import { ComptaController } from './compta.controller';
+import { UberService } from '@app/uber/uber.service';
+import { UberModule } from '@app/uber/uber.module';
 
 @Module({
+  imports: [UberModule],
   controllers: [ComptaController],
-  providers: [ComptaService],
+  providers: [UberService]
 })
+
 export class ComptaModule {}

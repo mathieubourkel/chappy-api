@@ -5,11 +5,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProjectModule } from './project/project.module';
 import { StepModule } from './step/step.module';
 import { TaskModule } from './task/task.module';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ComptaModule } from './compta/compta.module';
 import { LogModule } from './log/log.module';
 import { AuthModule } from './auth/auth.module';
-import { CommentModule } from './comment/comment.module';
+import { UberModule } from '@app/uber/uber.module';
 
 @Module({
   imports: [
@@ -21,17 +20,8 @@ import { CommentModule } from './comment/comment.module';
     TaskModule,
     ComptaModule,
     LogModule,
-    ClientsModule.register([
-      {
-        name: 'UBER',
-        transport: Transport.NATS,
-        options: {
-          servers: ['nats://localhost:4222'],
-        }
-      },
-    ]),
+    UberModule,
     AuthModule,
-    CommentModule,
   ]
 })
 export class AppModule {}
