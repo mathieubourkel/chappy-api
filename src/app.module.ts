@@ -11,6 +11,10 @@ import { msComptaController } from './ms-compta.controller';
 import { msLogController } from './ms-log.controller';
 import { msAuthController } from './ms-auth.controller';
 import { msMediaController } from './ms-media.controller';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ComptaModule } from './compta/compta.module';
+import { LogModule } from './log/log.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,10 +23,19 @@ import { msMediaController } from './ms-media.controller';
                              {dbName : "db-chappy-main"}),
     ProjectModule,
     StepModule,
-    TaskModule
-  ],
-  controllers:[msCommentController, msComptaController, msLogController, msAuthController, msMediaController],
-  providers: [AppService],
-  exports : [AppService]
+    TaskModule,
+    ComptaModule,
+    LogModule,
+    ClientsModule.register([
+      {
+        name: 'UBER',
+        transport: Transport.NATS,
+        options: {
+          servers: ['nats://localhost:4222'],
+        }
+      },
+    ]),
+    AuthModule,
+  ]
 })
 export class AppModule {}

@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Put, Delete } from '@nestjs/common'
 import { AppService } from './app.service';
 import { Observable, of } from 'rxjs';
 import { BaseUtils } from 'libs/base/base.utils';
+import { ModelEnum } from 'enums/model.enum';
 
 @Controller("compta")
 export class msComptaController extends BaseUtils {
@@ -10,9 +11,9 @@ export class msComptaController extends BaseUtils {
   }
   
   @Get(":refModel/:refId")
-    getPurchasesByIdRefModel<T>(@Param() params:{refModel: string, refId: string}):Observable<T> {
+    async getPurchasesByIdRefModel<T>(@Param() params:{refModel: string, refId: string}):Promise<T> {
         try {
-            return this.appService.client.send('GET_COMPTAS', params);
+            return await this.appService.getComptas(params)
         } catch (error) {
             console.log("error")
             this._catchEx(error)
