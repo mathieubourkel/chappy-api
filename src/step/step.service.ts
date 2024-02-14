@@ -4,7 +4,7 @@ import { UpdateStepDto } from './dto/update-step.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Step, StepDocument, } from './step.schema';
-import { _catchEx } from '../../exceptions/RcpExceptionFormated';
+import { _catchEx } from '../project/exceptions/RcpExceptionFormated';
 
 @Injectable()
 export class StepService {

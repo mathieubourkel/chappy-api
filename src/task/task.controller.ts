@@ -11,7 +11,7 @@ import {
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { _catchEx, _Ex } from '../../exceptions/RcpExceptionFormated';
+import { _catchEx, _Ex } from '../project/exceptions/RcpExceptionFormated';
 import { TaskDocument } from './task.schema';
 import { StepService } from '../step/step.service';
 import { StepDocument } from '../step/step.schema';

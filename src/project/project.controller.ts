@@ -11,7 +11,7 @@ import {
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectDocument } from './project.schema';
-import { _catchEx, _Ex, } from '../../exceptions/RcpExceptionFormated';
+import { _catchEx, _Ex, } from './exceptions/RcpExceptionFormated';
 import { UpdateProjectDto } from './dto/update-project.dto';
 
 

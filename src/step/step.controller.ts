@@ -15,7 +15,7 @@ import { StepDocument } from './step.schema';
 import {
   _catchEx,
   _Ex,
-} from '../../exceptions/RcpExceptionFormated';
+} from '../project/exceptions/RcpExceptionFormated';
 
 
 @Controller('step')

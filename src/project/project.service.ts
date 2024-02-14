@@ -6,7 +6,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { Project, ProjectDocument, } from './project.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { _catchEx, _Ex, } from '../../exceptions/RcpExceptionFormated';
+import { _catchEx, _Ex, } from './exceptions/RcpExceptionFormated';
 import { UpdateProjectDto } from './dto/update-project.dto';
 
 @Injectable()
