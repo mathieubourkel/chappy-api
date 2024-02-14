@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { CommentService } from './comment.service';
 import { CommentController } from './comment.controller';
+import {
+  UberModule
+} from '@app/uber/uber.module';
 
 @Module({
+  imports: [UberModule],
   controllers: [CommentController],
-  providers: [CommentService],
 })
 export class CommentModule {}
