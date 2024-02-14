@@ -1,17 +1,17 @@
 import { Body, Controller, Get, Post, Put, Req, Res } from '@nestjs/common';
-import { AppService } from './app.service';
 import { BaseUtils } from 'libs/base/base.utils';
+import { AuthService } from './auth.service';
 
 @Controller()
-export class msAuthController extends BaseUtils{
-  constructor(private readonly appService: AppService) {
+export class AuthController extends BaseUtils {
+  constructor(private readonly authService: AuthService) {
     super()
   }
   
   @Post('auth/login')
   async login(@Body() body: any) {
     try {
-      return this.appService.client.send('LOGIN', body);
+      return await this.authService.login(body);
   } catch (error) {
       this._catchEx(error)
   }
@@ -20,7 +20,7 @@ export class msAuthController extends BaseUtils{
 @Post('auth/register')
   async register(@Body() body: any) {
     try {
-      return this.appService.client.send('REGISTER', body);
+      return await this.authService.register(body);
   } catch (error) {
       this._catchEx(error)
   }
@@ -29,7 +29,7 @@ export class msAuthController extends BaseUtils{
 @Get('auth/refreshToken')
   async refreshToken(@Req() req: any, @Res() res:any) {
     try {
-      return this.appService.client.send('REFRESH_TOKEN', {req, res});
+      return this.authService.refreshToken(req, res);
   } catch (error) {
       this._catchEx(error)
   }
@@ -38,7 +38,7 @@ export class msAuthController extends BaseUtils{
 @Put('auth/resetPwd')
   async resetPwd(@Body() body: any) {
     try {
-      return this.appService.client.send('RESET_PWD', body);
+      return this.authService.resetPwd(body);
   } catch (error) {
       this._catchEx(error)
   }
@@ -47,7 +47,7 @@ export class msAuthController extends BaseUtils{
 @Get('user/all')
   async getAllUsers() {
     try {
-      return this.appService.client.send('ALL_USERS', {});
+      return this.authService.getAllUsers();
   } catch (error) {
       this._catchEx(error)
   }
@@ -56,7 +56,7 @@ export class msAuthController extends BaseUtils{
 @Get('user')
   async getInfosUser(@Req() req:any) {
     try {
-      return this.appService.client.send('INFOS_USER', req);
+      return this.authService.client.send('INFOS_USER', req);
   } catch (error) {
       this._catchEx(error)
   }
@@ -65,7 +65,7 @@ export class msAuthController extends BaseUtils{
 @Put('user')
   async modifyUser(@Body() body: any, @Req() req:any) {
     try {
-      return this.appService.client.send('MODIFY_USER', {body, req});
+      return this.authService.client.send('MODIFY_USER', {body, req});
   } catch (error) {
       this._catchEx(error)
   }
@@ -74,7 +74,7 @@ export class msAuthController extends BaseUtils{
 @Put('user')
   async deleteUser(@Req() req:any) {
     try {
-      return this.appService.client.send('DELETE_USER', req);
+      return this.authService.client.send('DELETE_USER', req);
   } catch (error) {
       this._catchEx(error)
   }
