@@ -5,16 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProjectModule } from './project/project.module';
 import { StepModule } from './step/step.module';
 import { TaskModule } from './task/task.module';
-import { AppService } from './app.service';
-import { msCommentController } from './ms-comment.controller';
-import { msComptaController } from './ms-compta.controller';
-import { msLogController } from './ms-log.controller';
-import { msAuthController } from './ms-auth.controller';
-import { msMediaController } from './ms-media.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ComptaModule } from './compta/compta.module';
 import { LogModule } from './log/log.module';
 import { AuthModule } from './auth/auth.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -36,6 +31,7 @@ import { AuthModule } from './auth/auth.module';
       },
     ]),
     AuthModule,
+    CommentModule,
   ]
 })
 export class AppModule {}
