@@ -5,16 +5,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProjectModule } from './project/project.module';
 import { StepModule } from './step/step.module';
 import { TaskModule } from './task/task.module';
-import { AppService } from './app.service';
-import { msCommentController } from './ms-comment.controller';
-import { msComptaController } from './ms-compta.controller';
-import { msLogController } from './ms-log.controller';
-import { msAuthController } from './ms-auth.controller';
-import { msMediaController } from './ms-media.controller';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ComptaModule } from './compta/compta.module';
 import { LogModule } from './log/log.module';
 import { AuthModule } from './auth/auth.module';
+import { UberModule } from '@app/uber/uber.module';
 
 @Module({
   imports: [
@@ -26,15 +20,7 @@ import { AuthModule } from './auth/auth.module';
     TaskModule,
     ComptaModule,
     LogModule,
-    ClientsModule.register([
-      {
-        name: 'UBER',
-        transport: Transport.NATS,
-        options: {
-          servers: ['nats://localhost:4222'],
-        }
-      },
-    ]),
+    UberModule,
     AuthModule,
   ]
 })

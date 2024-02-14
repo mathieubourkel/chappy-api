@@ -7,9 +7,7 @@ import { TaskModule } from 'src/task/task.module';
 
 
 @Module({
-  imports:[MongooseModule.forFeature([{name: Step.name, schema: StepSchema}]),
-      TaskModule
-],
+  imports:[MongooseModule.forFeature([{name: Step.name, schema: StepSchema}])],
   controllers: [StepController],
   providers: [StepService],
   exports: [StepService]

@@ -10,43 +10,38 @@ export class LogController extends BaseUtils {
   }
   
   @Get(":refModel/:refId")
-    getLogsByIdRefModel<T>(@Param() params:{refModel: string, refId: string}):Observable<T> {
-        try {
-            return this.logService.client.send('GET_LOGS', params);
-        } catch (error) {
-            console.log("error")
-            this._catchEx(error)
-        }
-        
+  async getLogsByIdRefModel(@Param() params:{refModel: string, refId: string}):Promise<unknown> {
+      try {
+          return await this.logService.getLogs(params);
+      } catch (error) {
+          this._catchEx(error)
+      }
   }
 
   @Put(":id")
-  async modifyStatusLog<T>(@Param('id') id:string, @Body() body:any) {
+  async modifyStatusLog(@Param('id') id:string, @Body() body:any):Promise<unknown> {
       try {
-          return this.logService.client.send('MODIFY_STATUS_LOG', {id, body});
+          return await this.logService.modify(id, body);
       } catch (error) {
-          console.log("bb", error)
           this._catchEx(error)
       }
-      
-}
-@Delete("clean")
-deleteManyLogs(@Body() body:any): Observable<{}> {
-  try {
-      return this.logService.client.send('DELETE_MANY_LOGS', body);  
-  } catch (error) {
-      this._catchEx(error)
   }
-  
-}
 
-@Delete(":id")
-delete(@Param() id:string): Observable<{}> {
-  try {
-      return this.logService.client.send('DELETE_LOG', id);  
-  } catch (error) {
-      this._catchEx(error)
+  @Delete(":id")
+  async delete(@Param() id:string):Promise<unknown> {
+    try {
+        return await this.logService.delete(id);  
+    } catch (error) {
+        this._catchEx(error)
+    }
   }
-  
-}
+
+  @Delete("clean")
+  async deleteManyLogs(@Body() body:any):Promise<unknown> {
+    try {
+        return await this.logService.deleteMany(body);  
+    } catch (error) {
+        this._catchEx(error)
+    }
+  }
 }

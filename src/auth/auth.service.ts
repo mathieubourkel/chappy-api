@@ -50,9 +50,25 @@ export class AuthService extends BaseUtils {
         }
     }
 
-    async getInfoUser() {
+    async getInfoUser(userId:number) {
         try {
-            return await firstValueFrom(this.client.send('ALL_USERS', {}));
+            return await firstValueFrom(this.client.send('INFOS_USER', userId));
+        } catch (error) {
+            this._catchEx(error)
+        }
+    }
+
+    async modifyUser(body:any, userId:number) {
+        try {
+            return await firstValueFrom(this.client.send('MODIFY_USER', {body, userId}));
+        } catch (error) {
+            this._catchEx(error)
+        }
+    }
+
+    async deleteUser(userId:number) {
+        try {
+            return await firstValueFrom(this.client.send('DELETE_USER', userId));
         } catch (error) {
             this._catchEx(error)
         }
