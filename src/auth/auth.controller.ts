@@ -1,18 +1,18 @@
 import { Body, Controller, Get, Post, Put, Req, Res } from '@nestjs/common';
 import { BaseUtils } from 'libs/base/base.utils';
-import { AuthService } from './auth.service';
+import { UberService } from '@app/uber/uber.service';
 
 @Controller()
 export class AuthController extends BaseUtils {
 
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly uberService: UberService) {
     super()
   }
   
   @Post('auth/login')
   async login(@Body() body: any) {
     try {
-      return await this.authService.login(body);
+      return await this.uberService.send('LOGIN', body)
     } catch (error) {
       this._catchEx(error)
     }
@@ -21,7 +21,7 @@ export class AuthController extends BaseUtils {
   @Post('auth/register')
   async register(@Body() body: any) {
     try {
-      return await this.authService.register(body);
+      return await this.uberService.send('REGISTER', body)
     } catch (error) {
       this._catchEx(error)
     }
@@ -30,7 +30,7 @@ export class AuthController extends BaseUtils {
   @Get('auth/refreshToken')
   async refreshToken(@Req() req: any, @Res() res:any) {
     try {
-      return this.authService.refreshToken(req, res);
+      return await this.uberService.send('REFRESH_TOKEN', {req, res})
     } catch (error) {
       this._catchEx(error)
     }
@@ -39,7 +39,7 @@ export class AuthController extends BaseUtils {
   @Put('auth/resetPwd')
   async resetPwd(@Body() body: any) {
     try {
-      return this.authService.resetPwd(body);
+      return await this.uberService.send('RESET_PWD', body)
     } catch (error) {
       this._catchEx(error)
     }
@@ -48,7 +48,7 @@ export class AuthController extends BaseUtils {
   @Get('user/all')
   async getAllUsers() {
     try {
-      return this.authService.getAllUsers();
+      return await this.uberService.send('ALL_USERS', {})
     } catch (error) {
       this._catchEx(error)
     }
@@ -57,7 +57,7 @@ export class AuthController extends BaseUtils {
   @Get('user')
     async getInfosUser(@Req() req:any) {
       try {
-        return await this.authService.getInfoUser(+req.user.userId);
+        return await this.uberService.send('INFOS_USER', +req.user.userId)
     } catch (error) {
       this._catchEx(error)
     }
@@ -66,7 +66,7 @@ export class AuthController extends BaseUtils {
   @Put('user')
     async modifyUser(@Body() body: any, @Req() req:any) {
       try {
-        return await this.authService.modifyUser(body, +req.user.userId);
+        return await this.uberService.send('MODIFY_USER', {body, userId: +req.user.userId})
     } catch (error) {
       this._catchEx(error)
     }
@@ -75,7 +75,7 @@ export class AuthController extends BaseUtils {
   @Put('user')
     async deleteUser(@Req() req:any) {
       try {
-        return this.authService.deleteUser(+req.user.userId);
+        return await this.uberService.send('DELETE_USER', +req.user.userId)
     } catch (error) {
       this._catchEx(error)
     }

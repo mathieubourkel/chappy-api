@@ -8,7 +8,6 @@ import { TaskModule } from './task/task.module';
 import { ComptaModule } from './compta/compta.module';
 import { LogModule } from './log/log.module';
 import { AuthModule } from './auth/auth.module';
-import { UberModule } from '@app/uber/uber.module';
 
 @Module({
   imports: [
@@ -20,7 +19,6 @@ import { UberModule } from '@app/uber/uber.module';
     TaskModule,
     ComptaModule,
     LogModule,
-    UberModule,
     AuthModule,
   ]
 })

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { LogService } from './log.service';
 import { LogController } from './log.controller';
+import { UberModule } from '@app/uber/uber.module';
 
 @Module({
+  imports: [UberModule],
   controllers: [LogController],
-  providers: [LogService],
 })
 export class LogModule {}
