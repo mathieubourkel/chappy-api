@@ -45,7 +45,7 @@ export class ProjectController {
   @Get('/my-projects')
   async findProjectsByOwner(@Body() requestBody: { userId: string }): Promise<ProjectDocument[]> {
     try {
-      const userId:string = requestBody.userId;
+      const userId: string = requestBody.userId;
       if (!userId || userId) _Ex("USER DON'T EXIST", 404, "USER-NO-EXIST", "/" )
       const projects:ProjectDocument[] =  await this.projectService.getProjectsByUser(userId);
       if (!projects || projects.length === 0) _Ex("PROJECTS DON'T EXIST", 404, "PC-NO-EXIST", "/" )

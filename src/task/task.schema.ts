@@ -8,17 +8,25 @@ import { Types } from 'mongoose';
 import { Project } from '../project/project.schema';
 import { CategoryEnum } from './enum/category.enum';
 import { Step } from '../step/step.schema';
+import {
+  IsDate,
+  IsNotEmpty, IsString, MinDate,
+} from 'class-validator';
 
 export type TaskDocument = Task & Document;
 
 @Schema({collection: 'task', timestamps:true})
 export class Task {
+  @IsNotEmpty()
   @Prop({required:true})
   name : string;
 
+  @IsNotEmpty()
   @Prop({required:true})
   description: string;
 
+  @IsNotEmpty()
+  @IsString()
   @Prop({required:true})
   owner: string;
 
@@ -31,9 +39,11 @@ export class Task {
   @Prop()
   budget: number;
 
+  @IsDate()
   @Prop({required:true})
   startDate : Date;
 
+  @IsDate()
   @Prop({required:true})
   expiryDate : Date;
 
@@ -44,7 +54,7 @@ export class Task {
   step: Step | Types.ObjectId;
 
   @Prop()
-  members: string[];
+  members: string[] | number[];
 
 }
 

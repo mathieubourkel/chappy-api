@@ -1,28 +1,31 @@
 import {
-  IsDateString,
+  IsDate,
   IsEnum,
-  IsInt,
+  IsInt, IsNotEmpty, IsNumber,
   IsString,
   Length,
-  Max,
+  Max, MinLength,
 } from 'class-validator';
 import { StatusEnum } from '../../step/enum/status.enum';
 
 export class CreateProjectDto {
   @IsString()
   @Length(1, 50)
+  @IsNotEmpty()
   name:string;
 
   @IsString()
+  @IsNotEmpty()
   @Length(1, 250)
   description:string;
 
+  @IsNotEmpty()
   @IsString()
-  @Length(1, 50)
-  owner:string;
+  owner: string;
 
   @IsString()
   @Length(1, 16)
+  @IsNotEmpty()
   code:string;
 
   @IsEnum(StatusEnum)
@@ -30,9 +33,10 @@ export class CreateProjectDto {
   status:StatusEnum;
 
   @IsInt()
+  @MinLength(0)
   globalBudget:number;
 
-  @IsDateString()
+  @IsDate()
   estimEndDate:Date;
 
 }

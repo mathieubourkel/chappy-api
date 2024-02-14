@@ -1,6 +1,6 @@
 import {
   IsDateString,
-  IsEnum, IsInt, IsMongoId,
+  IsEnum, IsInt, IsMongoId, IsNotEmpty, IsNumber,
   IsString,
   Length, Max,
 } from 'class-validator';
@@ -14,9 +14,10 @@ export class CreateTaskDto {
   @Length(1, 50)
   name:string;
 
+  @IsNumber()
   @IsString()
-  @Length(1, 50)
-  owner: string;
+  @IsNotEmpty()
+  owner: string | number;
 
   @IsString()
   @Length(1, 250)

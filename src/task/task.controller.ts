@@ -48,9 +48,9 @@ export class TaskController {
   }
 
   @Get('/my-tasks')
-  async findTasksByOwner(@Body() requestBody: { userId: string }): Promise<TaskDocument[]> {
+  async findTasksByOwner(@Body() requestBody: { userId: string}): Promise<TaskDocument[]> {
     try {
-      const userId = requestBody.userId;
+      const userId: string = requestBody.userId;
       if (!userId) _Ex("USER DON'T EXIST", 404, "USER-NO-EXIST", "/" )
       return await this.taskService.getTasksByUser(userId);
     } catch (error) {

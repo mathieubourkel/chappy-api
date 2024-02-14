@@ -34,7 +34,7 @@ export class TaskService {
     }
   }
 
-  async getTasksByUser(id: string): Promise<TaskDocument[]> {
+  async getTasksByUser(id:string): Promise<TaskDocument[]> {
     try {
       return await this.taskModel.find({owner: id});
     } catch (error) {
