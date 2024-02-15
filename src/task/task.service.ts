@@ -4,16 +4,19 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Task, TaskDocument } from './task.schema';
-import { _catchEx } from '../project/exceptions/RcpExceptionFormated';
+import {
+  BaseUtils
+} from '../../libs/base/base.utils';
 
 
 
 @Injectable()
-export class TaskService {
+export class TaskService extends BaseUtils {
 
   constructor(
     @InjectModel(Task.name)
     private taskModel: Model<TaskDocument>) {
+    super()
   }
 
 
@@ -22,7 +25,7 @@ export class TaskService {
       const task = new this.taskModel(body);
       return await task.save();
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -30,7 +33,7 @@ export class TaskService {
     try {
       return await this.taskModel.findOne({ _id });
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -38,7 +41,7 @@ export class TaskService {
     try {
       return await this.taskModel.find({owner: id});
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -46,7 +49,7 @@ export class TaskService {
     try {
       return await this.taskModel.find({project: id});
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -54,7 +57,7 @@ export class TaskService {
     try {
       return await this.taskModel.find({step: id});
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -62,7 +65,7 @@ export class TaskService {
     try {
       return await this.taskModel.findOneAndUpdate({ _id }, body, {new : true});
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -70,7 +73,7 @@ export class TaskService {
     try {
       return await this.taskModel.findOneAndDelete({ _id });
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 }

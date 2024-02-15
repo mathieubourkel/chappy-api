@@ -1,8 +1,8 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateTaskDto } from './create-task.dto';
 import { IsDateString, IsEnum, IsInt, IsString, Length, Max } from 'class-validator';
-import { StatusEnum } from '../enum/status.enum';
-import { CategoryEnum } from '../enum/category.enum';
+import { StatusTaskEnum } from '../../../enums/statusTask.enum';
+import { CategoryTaskEnum } from '../../../enums/categoryTask.enum';
 
 export class UpdateTaskDto extends PartialType(CreateTaskDto) {
 
@@ -14,13 +14,13 @@ export class UpdateTaskDto extends PartialType(CreateTaskDto) {
   @Length(1, 250)
   description:string;
 
-  @IsEnum(StatusEnum)
+  @IsEnum(StatusTaskEnum)
   @Max(3)
-  status: StatusEnum;
+  status: StatusTaskEnum;
 
-  @IsEnum(StatusEnum)
+  @IsEnum(StatusTaskEnum)
   @Max(12)
-  category: CategoryEnum;
+  category: CategoryTaskEnum;
 
   @IsInt()
   budget:number;

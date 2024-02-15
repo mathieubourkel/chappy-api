@@ -12,7 +12,7 @@ export abstract class BaseUtils {
       message,
       statusCode,
       context: {
-        ms: "compta",
+        ms: "main",
         error: {
           exceptionPosition: method,
           errorCode: code,

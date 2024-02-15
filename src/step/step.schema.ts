@@ -1,7 +1,7 @@
 import { Project } from '../project/project.schema';
 import { Prop, Schema, SchemaFactory, } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { StatusEnum } from './enum/status.enum';
+import { StatusStepEnum } from '../../enums/statusStep.enum';
 import { Task } from '../task/task.schema';
 
 export type StepDocument = Step & Document;
@@ -14,8 +14,8 @@ export class Step {
   @Prop({required:true})
   description: string;
 
-  @Prop({type: ()=> StatusEnum, required:true, default: StatusEnum.IN_PROGRESS })
-  status: StatusEnum;
+  @Prop({type: ()=> StatusStepEnum, required:true, default: StatusStepEnum.IN_PROGRESS })
+  status: StatusStepEnum;
 
   @Prop()
   budget: number;

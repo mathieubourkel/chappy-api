@@ -8,6 +8,7 @@ import { TaskModule } from './task/task.module';
 import { ComptaModule } from './compta/compta.module';
 import { LogModule } from './log/log.module';
 import { AuthModule } from './auth/auth.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
     ComptaModule,
     LogModule,
     AuthModule,
+    CommentModule
   ]
 })
 export class AppModule {}
