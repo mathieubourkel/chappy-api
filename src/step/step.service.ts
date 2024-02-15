@@ -4,14 +4,15 @@ import { UpdateStepDto } from './dto/update-step.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Step, StepDocument, } from './step.schema';
-import { _catchEx } from '../project/exceptions/RcpExceptionFormated';
+import { BaseUtils } from '../../libs/base/base.utils';
 
 @Injectable()
-export class StepService {
+export class StepService extends BaseUtils {
 
   constructor(
     @InjectModel(Step.name)
     private stepModel: Model<StepDocument>) {
+    super()
   }
 
   async create(body: CreateStepDto): Promise<StepDocument> {
@@ -19,7 +20,7 @@ export class StepService {
       const step = new this.stepModel(body);
       return await step.save();
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -27,7 +28,7 @@ export class StepService {
     try {
       return await this.stepModel.findOne({ _id });
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -36,7 +37,7 @@ export class StepService {
       // @ts-ignore
       return await this.stepModel.findOneAndUpdate({ _id }, body, {new : true});
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -44,7 +45,7 @@ export class StepService {
     try {
       return  await this.stepModel.findOneAndDelete({ _id });
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
   }

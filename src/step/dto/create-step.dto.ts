@@ -1,6 +1,6 @@
 import { IsDateString, IsEnum, IsInt, IsMongoId, IsString, Length, Max } from 'class-validator';
 import { Types } from 'mongoose';
-import { StatusEnum } from '../enum/status.enum';
+import { StatusStepEnum } from '../../../enums/statusStep.enum';
 
 export class CreateStepDto {
 
@@ -12,9 +12,9 @@ export class CreateStepDto {
   @Length(1, 250)
   description:string;
 
-  @IsEnum(StatusEnum)
+  @IsEnum(StatusStepEnum)
   @Max(3)
-  status: StatusEnum;
+  status: StatusStepEnum;
 
   @IsInt()
   budget:number;

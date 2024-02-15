@@ -5,8 +5,8 @@ import {
   Length, Max,
 } from 'class-validator';
 import { Types } from 'mongoose';
-import { StatusEnum } from '../enum/status.enum';
-import { CategoryEnum } from '../enum/category.enum';
+import { StatusTaskEnum } from '../../../enums/statusTask.enum';
+import { CategoryTaskEnum } from '../../../enums/categoryTask.enum';
 
 export class CreateTaskDto {
 
@@ -23,13 +23,13 @@ export class CreateTaskDto {
   @Length(1, 250)
   description:string;
 
-  @IsEnum(StatusEnum)
+  @IsEnum(StatusTaskEnum)
   @Max(3)
-  status: StatusEnum;
+  status: StatusTaskEnum;
 
-  @IsEnum(StatusEnum)
+  @IsEnum(StatusTaskEnum)
   @Max(12)
-  category: CategoryEnum;
+  category: CategoryTaskEnum;
 
   @IsInt()
   budget:number;

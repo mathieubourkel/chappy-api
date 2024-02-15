@@ -1,21 +1,19 @@
-import {
-  Body,
-  Injectable,
-} from '@nestjs/common';
+import { Injectable, } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { Project, ProjectDocument, } from './project.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
-import { _catchEx, _Ex, } from './exceptions/RcpExceptionFormated';
+import { Model } from 'mongoose';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { BaseUtils } from '../../libs/base/base.utils';
 
 @Injectable()
-export class ProjectService {
+export class ProjectService extends BaseUtils {
 
 
   constructor(
     @InjectModel(Project.name)
     private projectModel: Model<ProjectDocument>) {
+    super()
   }
 
   async create(body: CreateProjectDto):Promise<ProjectDocument> {
@@ -23,7 +21,7 @@ export class ProjectService {
       const project = new this.projectModel(body);
       return await project.save();
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -31,7 +29,7 @@ export class ProjectService {
     try {
       return await this.projectModel.findOne({ _id });
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -39,7 +37,7 @@ export class ProjectService {
     try {
       return await this.projectModel.find({owner: id});
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -48,7 +46,7 @@ export class ProjectService {
       // @ts-ignore
       return await this.projectModel.findOneAndUpdate({ _id }, body, {new : true});
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -56,7 +54,7 @@ export class ProjectService {
     try {
       return await this.projectModel.findOneAndDelete({ _id });
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 }

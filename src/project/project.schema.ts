@@ -1,6 +1,6 @@
 import { Document, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { StatusEnum } from './enum/status.enum';
+import { StatusProjectEnum } from '../../enums/statusProject.enum';
 import { Step } from '../step/step.schema';
 import { Task } from '../task/task.schema';
 import { IsString } from 'class-validator';
@@ -22,8 +22,8 @@ export class Project {
   @Prop({required:true})
   code: string;
 
-  @Prop({type: ()=> StatusEnum, required:true, default: StatusEnum.IN_PROGRESS })
-  status: StatusEnum;
+  @Prop({type: ()=> StatusProjectEnum, required:true, default: StatusProjectEnum.IN_PROGRESS })
+  status: StatusProjectEnum;
 
   @Prop({required:true})
   globalBudget: number;

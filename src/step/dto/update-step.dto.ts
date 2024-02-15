@@ -6,7 +6,7 @@ import {
   IsString,
   Length, Max,
 } from 'class-validator';
-import { StatusEnum } from '../enum/status.enum';
+import { StatusStepEnum } from '../../../enums/statusStep.enum';
 import { Types } from 'mongoose';
 
 export class UpdateStepDto extends PartialType(CreateStepDto) {
@@ -19,9 +19,9 @@ export class UpdateStepDto extends PartialType(CreateStepDto) {
   @Length(1, 250)
   description:string;
 
-  @IsEnum(StatusEnum)
+  @IsEnum(StatusStepEnum)
   @Max(3)
-  status: StatusEnum;
+  status: StatusStepEnum;
 
   @IsInt()
   budget:number;

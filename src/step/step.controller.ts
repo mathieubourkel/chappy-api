@@ -12,24 +12,23 @@ import { StepService } from './step.service';
 import { CreateStepDto } from './dto/create-step.dto';
 import { UpdateStepDto } from './dto/update-step.dto';
 import { StepDocument } from './step.schema';
-import {
-  _catchEx,
-  _Ex,
-} from '../project/exceptions/RcpExceptionFormated';
+import { BaseUtils } from '../../libs/base/base.utils';
 
 
 @Controller('step')
-export class StepController {
-  constructor(private readonly stepService: StepService) {}
+export class StepController extends BaseUtils {
+  constructor(private readonly stepService: StepService) {
+    super()
+  }
 
   @Post('/')
   async create(@Body(new ValidationPipe()) body: CreateStepDto) : Promise<StepDocument> {
     try {
       const step:StepDocument = await this.stepService.create(body);
-      if (!step) _Ex("STEP CREATION FAILED", 400, "SC-BUILD-FAILED", "/" )
+      if (!step) this._Ex("STEP CREATION FAILED", 400, "SC-BUILD-FAILED", "/" )
       return step;
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -37,10 +36,10 @@ export class StepController {
   async findStepById(@Param('id') id: string): Promise<StepDocument> {
     try {
       const step:StepDocument = await this.stepService.getStepById(id);
-      if (!step) _Ex("STEP DON'T EXIST", 404, "PS-NO-EXIST", "/" )
+      if (!step) this._Ex("STEP DON'T EXIST", 404, "PS-NO-EXIST", "/" )
       return step;
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
@@ -48,17 +47,17 @@ export class StepController {
   async update(@Param('id') id: string, @Body() body: UpdateStepDto): Promise<Partial<StepDocument>> {
     try {
       const step:Partial<StepDocument> = await this.stepService.update(id, body);
-      if (!step) _Ex("UPDATE FAILED", 400, "SC-STEP-NOTUP", "/" )
+      if (!step) this._Ex("UPDATE FAILED", 400, "SC-STEP-NOTUP", "/" )
       return step;
     } catch (error) {
-      _catchEx(error)
+      this._catchEx(error)
     }
   }
 
   @Delete('/:id')
   delete(@Param('id') id: string):Promise<StepDocument> {
     const step:Promise<StepDocument> = this.stepService.delete(id);
-    if (!step) _Ex("DELETE FAILED", 403, "SC-NO-DELETE", "/" );
+    if (!step) this._Ex("DELETE FAILED", 403, "SC-NO-DELETE", "/" );
     return step;
   }
 }

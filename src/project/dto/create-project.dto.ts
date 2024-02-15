@@ -6,7 +6,7 @@ import {
   Length,
   Max, MinLength,
 } from 'class-validator';
-import { StatusEnum } from '../../step/enum/status.enum';
+import { StatusStepEnum } from '../../../enums/statusStep.enum';
 
 export class CreateProjectDto {
   @IsString()
@@ -28,9 +28,9 @@ export class CreateProjectDto {
   @IsNotEmpty()
   code:string;
 
-  @IsEnum(StatusEnum)
+  @IsEnum(StatusStepEnum)
   @Max(3)
-  status:StatusEnum;
+  status:StatusStepEnum;
 
   @IsInt()
   @MinLength(0)

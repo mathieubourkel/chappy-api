@@ -3,10 +3,10 @@ import {
   Schema,
   SchemaFactory,
 } from '@nestjs/mongoose';
-import { StatusEnum } from './enum/status.enum';
+import { StatusTaskEnum } from '../../enums/statusTask.enum';
 import { Types } from 'mongoose';
 import { Project } from '../project/project.schema';
-import { CategoryEnum } from './enum/category.enum';
+import { CategoryTaskEnum } from '../../enums/categoryTask.enum';
 import { Step } from '../step/step.schema';
 import {
   IsDate,
@@ -30,11 +30,11 @@ export class Task {
   @Prop({required:true})
   owner: string;
 
-  @Prop({type: ()=> StatusEnum, required:true, default: StatusEnum.IN_PROGRESS })
-  status: StatusEnum;
+  @Prop({type: ()=> StatusTaskEnum, required:true, default: StatusTaskEnum.IN_PROGRESS })
+  status: StatusTaskEnum;
 
-  @Prop({type: ()=> CategoryEnum, required:true, default: CategoryEnum.NONE })
-  category: CategoryEnum;
+  @Prop({type: ()=> CategoryTaskEnum, required:true, default: CategoryTaskEnum.NONE })
+  category: CategoryTaskEnum;
 
   @Prop()
   budget: number;
