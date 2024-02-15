@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { BaseUtils } from 'libs/base/base.utils';
+import { BaseUtils } from '../../libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
 import { CommentInterface, UpdateCommentInterface, } from '../../interfaces/comment.interface';
 import { RefEnumKeys } from '../../type/refEnumKeys.comment.type';

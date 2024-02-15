@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Put, Req, Res } from '@nestjs/common';
-import { BaseUtils } from 'libs/base/base.utils';
+import { BaseUtils } from '../../libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
 
 @Controller()
