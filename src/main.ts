@@ -6,6 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new ErrorHandlerMiddleware(httpAdapter));
-  await app.listen(3000);
+  app.listen(process.env.VITE_BACK_PORT, () => {
+    console.log(`MAIN LISTEN on ${process.env.VITE_BACK_HOST}:${process.env.VITE_BACK_PORT}`)
+  });
 }
 bootstrap();

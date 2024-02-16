@@ -9,7 +9,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'UBER',
         transport: Transport.NATS,
         options: {
-          servers: ['nats://localhost:4222'],
+          servers: [`nats://${process.env.BROKER_HOST}:${process.env.BROKER_PORT}`],
         },
       },
     ]),
