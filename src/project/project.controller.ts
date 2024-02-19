@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
   ValidationPipe,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
@@ -45,12 +46,11 @@ export class ProjectController extends BaseUtils{
   }
 
   @Get('/my-projects')
-  async findProjectsByOwner(@Body() requestBody: { userId: string }): Promise<ProjectDocument[]> {
+  async findProjectsByOwner(@Req() req:any): Promise<ProjectDocument[]> {
     try {
-      const userId: string = requestBody.userId;
-      if (!userId || userId) this._Ex("USER DON'T EXIST", 404, "USER-NO-EXIST", "/" )
-      const projects:ProjectDocument[] =  await this.projectService.getProjectsByUser(userId);
-      if (!projects || projects.length === 0) this._Ex("PROJECTS DON'T EXIST", 404, "PC-NO-EXIST", "/" )
+      if (!req.user.userId) this._Ex("USER DON'T EXIST", 404, "USER-NO-EXIST", "/" )
+      const projects:ProjectDocument[] =  await this.projectService.getProjectsByUser(req.user.userId);
+      if (!projects) this._Ex("PROJECTS DON'T EXIST", 404, "PC-NO-EXIST", "/" )
       return projects;
     } catch (error) {
       this._catchEx(error)

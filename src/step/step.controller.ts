@@ -21,7 +21,7 @@ export class StepController extends BaseUtils {
     super()
   }
 
-  @Post('/')
+  @Post()
   async create(@Body(new ValidationPipe()) body: CreateStepDto) : Promise<StepDocument> {
     try {
       const step:StepDocument = await this.stepService.create(body);
@@ -32,7 +32,7 @@ export class StepController extends BaseUtils {
     }
   }
 
-  @Get('/:id')
+  @Get(':id')
   async findStepById(@Param('id') id: string): Promise<StepDocument> {
     try {
       const step:StepDocument = await this.stepService.getStepById(id);
@@ -43,7 +43,7 @@ export class StepController extends BaseUtils {
     }
   }
 
-  @Patch('/:id')
+  @Patch(':id')
   async update(@Param('id') id: string, @Body() body: UpdateStepDto): Promise<Partial<StepDocument>> {
     try {
       const step:Partial<StepDocument> = await this.stepService.update(id, body);
@@ -54,7 +54,7 @@ export class StepController extends BaseUtils {
     }
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   delete(@Param('id') id: string):Promise<StepDocument> {
     const step:Promise<StepDocument> = this.stepService.delete(id);
     if (!step) this._Ex("DELETE FAILED", 403, "SC-NO-DELETE", "/" );
