@@ -27,7 +27,7 @@ import { verifyRefreshMiddleware, verifyTokenMiddleware } from 'middlewares/toke
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(verifyTokenMiddleware).forRoutes( 'log', 'step', 'task', 'compta', 'user');
+    consumer.apply(verifyTokenMiddleware).forRoutes( 'log', 'step','compta', 'user', 'group');
     consumer.apply(verifyRefreshMiddleware).forRoutes('auth/refreshToken');
   }
 }

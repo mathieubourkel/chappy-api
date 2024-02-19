@@ -10,7 +10,7 @@ import { CategoryTaskEnum } from '../../enums/categoryTask.enum';
 import { Step } from '../step/step.schema';
 import {
   IsDate,
-  IsNotEmpty, IsString, MinDate,
+  IsNotEmpty, IsString, MinDate, IsInt
 } from 'class-validator';
 
 export type TaskDocument = Task & Document;
@@ -26,9 +26,9 @@ export class Task {
   description: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsInt()
   @Prop({required:true})
-  owner: string;
+  owner: number;
 
   @Prop({type: ()=> StatusTaskEnum, required:true, default: StatusTaskEnum.IN_PROGRESS })
   status: StatusTaskEnum;
@@ -45,7 +45,7 @@ export class Task {
 
   @IsDate()
   @Prop({required:true})
-  expiryDate : Date;
+  endDate : Date;
 
   @Prop({ type: Types.ObjectId, ref: 'Project' })
   project: Project | Types.ObjectId;
@@ -54,7 +54,7 @@ export class Task {
   step: Step | Types.ObjectId;
 
   @Prop()
-  members: string[] | number[];
+  members: number[]
 
 }
 

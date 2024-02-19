@@ -14,11 +14,6 @@ export class CreateTaskDto {
   @Length(1, 50)
   name:string;
 
-  @IsNumber()
-  @IsString()
-  @IsNotEmpty()
-  owner: string | number;
-
   @IsString()
   @Length(1, 250)
   description:string;
@@ -38,12 +33,12 @@ export class CreateTaskDto {
   startDate:Date;
 
   @IsDateString()
-  expiryDate:Date;
+  endDate:Date;
 
   @IsMongoId()
   project: Types.ObjectId
 
   @IsMongoId()
   step: Types.ObjectId
-
+  owner: number
 }
