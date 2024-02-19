@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateProjectDto } from './create-project.dto';
 import {
-  IsDate,
+  IsDateString,
   IsInt, IsNotEmpty,
   IsString,
   Length, Max,
@@ -23,8 +23,8 @@ export class UpdateProjectDto extends PartialType(CreateProjectDto) {
   status:number;
 
   @IsInt()
-  globalBudget:number;
+  budget:number;
 
-  @IsDate()
+  @IsDateString()
   estimEndDate:Date;
 }

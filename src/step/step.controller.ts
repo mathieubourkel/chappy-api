@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
   ValidationPipe,
@@ -13,11 +13,13 @@ import { CreateStepDto } from './dto/create-step.dto';
 import { UpdateStepDto } from './dto/update-step.dto';
 import { StepDocument } from './step.schema';
 import { BaseUtils } from '../../libs/base/base.utils';
+import { TaskService } from 'src/task/task.service';
 
 
 @Controller('step')
 export class StepController extends BaseUtils {
-  constructor(private readonly stepService: StepService) {
+  constructor(private readonly stepService: StepService,
+    private readonly taskService: TaskService) {
     super()
   }
 
@@ -37,13 +39,14 @@ export class StepController extends BaseUtils {
     try {
       const step:StepDocument = await this.stepService.getStepById(id);
       if (!step) this._Ex("STEP DON'T EXIST", 404, "PS-NO-EXIST", "/" )
+      step.tasks = await this.taskService.getTasksByIdStep(id)
       return step;
     } catch (error) {
       this._catchEx(error)
     }
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(@Param('id') id: string, @Body() body: UpdateStepDto): Promise<Partial<StepDocument>> {
     try {
       const step:Partial<StepDocument> = await this.stepService.update(id, body);

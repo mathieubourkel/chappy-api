@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Delete, UseFilters, HttpException, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Req, Delete, UseFilters, HttpException, HttpStatus } from '@nestjs/common';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
 
@@ -19,8 +19,9 @@ export class ComptaController extends BaseUtils {
   }
 
   @Post()
-  async createCompta(@Body() body:any):Promise<unknown> {
+  async createCompta(@Body() body:any, @Req() req:any):Promise<unknown> {
     try {
+        body.owner = +req.user.userId
         return await this.uberService.send('POST_COMPTA', body)
     } catch (error) {
         this._catchEx(error)

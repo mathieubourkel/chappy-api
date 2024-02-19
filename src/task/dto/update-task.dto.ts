@@ -29,6 +29,6 @@ export class UpdateTaskDto extends PartialType(CreateTaskDto) {
   startDate:Date;
 
   @IsDateString()
-  expiryDate:Date;
+  endDate:Date;
 
 }

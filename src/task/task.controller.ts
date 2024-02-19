@@ -3,9 +3,10 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
+  Req,
   ValidationPipe,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
@@ -29,11 +30,11 @@ export class TaskController extends BaseUtils {
 
   @Post("/task")
   async create(
-    @Body(new ValidationPipe()) body: CreateTaskDto) :Promise<TaskDocument> {
+    @Body(new ValidationPipe()) body: CreateTaskDto, @Req() req:any) :Promise<TaskDocument> {
     try {
-      const task:TaskDocument = await this.taskService.create(body);
-      const projectOfStep:StepDocument = await this.stepService.getStepById(body.step.toString())
-      if (!task || projectOfStep.project.toString() !== task.project.toString()) this._Ex("TASK CREATION FAILED", 400, "TC-BUILD-FAILED", "/" )
+      const task:TaskDocument = await this.taskService.create({...body, owner: +req.user.userId});
+    //  const projectOfStep:StepDocument = await this.stepService.getStepById(body.step.toString())
+   //   if (!task || projectOfStep.project.toString() !== task.project.toString()) this._Ex("TASK CREATION FAILED", 400, "TC-BUILD-FAILED", "/" )
       return task;
     } catch (error) {
       this._catchEx(error)
@@ -52,11 +53,10 @@ export class TaskController extends BaseUtils {
   }
 
   @Get('/my-tasks')
-  async findTasksByOwner(@Body() requestBody: { userId: string}): Promise<TaskDocument[]> {
+  async findTasksByOwner(@Req() req:any): Promise<TaskDocument[]> {
     try {
-      const userId: string = requestBody.userId;
-      if (!userId) this._Ex("USER DON'T EXIST", 404, "USER-NO-EXIST", "/" )
-      return await this.taskService.getTasksByUser(userId);
+      if (!req.user.userId) this._Ex("USER DON'T EXIST", 404, "USER-NO-EXIST", "/" )
+      return await this.taskService.getTasksByUser(+req.user.userId);
     } catch (error) {
       this._catchEx(error)
     }
@@ -66,7 +66,7 @@ export class TaskController extends BaseUtils {
   async findTasksByIdProject( @Param('idProject') idProject: string): Promise<TaskDocument[]> {
     try {
       const tasks:TaskDocument[] =  await this.taskService.getTasksByIdProject(idProject);
-      if (!tasks || tasks.length === 0) this._Ex("TASKS DON'T EXIST", 404, "TC-NO-EXIST", "/" )
+      if (!tasks) this._Ex("TASKS DON'T EXIST", 404, "TC-NO-EXIST", "/" )
       return tasks;
     } catch (error) {
       this._catchEx(error)
@@ -77,14 +77,14 @@ export class TaskController extends BaseUtils {
   async findTasksByIdStep( @Param('idStep') idStep: string): Promise<TaskDocument[]> {
     try {
       const tasks:TaskDocument[] = await this.taskService.getTasksByIdStep(idStep);
-      if (!tasks || tasks.length === 0) this._Ex("TASKS DON'T EXIST", 404, "TC-NO-EXIST", "/" )
+      if (!tasks) this._Ex("TASKS DON'T EXIST", 404, "TC-NO-EXIST", "/" )
       return tasks;
     } catch (error) {
       this._catchEx(error)
     }
   }
 
-  @Patch('/task/:id')
+  @Put('/task/:id')
   async update(@Param('id') id: string, @Body() body: UpdateTaskDto):Promise<Partial<TaskDocument>> {
     try {
       const task:Partial<TaskDocument> = await this.taskService.update(id, body);

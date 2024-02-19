@@ -1,12 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res } from '@nestjs/common';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
+import { ProjectService } from "../project/project.service"
 import { cookieOptions } from 'utils/cookies.options.utils';
 
 @Controller()
 export class AuthController extends BaseUtils {
 
-  constructor(private readonly uberService: UberService) {
+  constructor(private readonly uberService: UberService,
+    private readonly projectService: ProjectService) {
     super()
   }
   
@@ -65,7 +67,12 @@ export class AuthController extends BaseUtils {
   @Get('user')
     async getInfosUser(@Req() req:any) {
       try {
-        return await this.uberService.send('INFOS_USER', {userId:+req.user.userId})
+        const infosUser:any = await this.uberService.send('INFOS_USER', +req.user.userId)
+        const infosProject = await this.projectService.getProjectsByUser(req.user.userId);
+        infosUser.projects = infosProject
+        infosUser.participations = []
+        infosUser.myOwnTasks = []
+        return infosUser
     } catch (error) {
       this._catchEx(error)
     }
@@ -99,7 +106,7 @@ export class AuthController extends BaseUtils {
     }
   }
 
-  @Get('user/all')
+  @Get('group/all')
   async getAllGroups() {
     try {
       return await this.uberService.send('ALL_GROUPS', {})

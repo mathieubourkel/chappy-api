@@ -27,13 +27,13 @@ export class ProjectService extends BaseUtils {
 
   async getProjectById(_id: string): Promise<ProjectDocument> {
     try {
-      return await this.projectModel.findOne({ _id });
+      return await this.projectModel.findOne({ _id }).populate('steps');
     } catch (error) {
       this._catchEx(error)
     }
   }
 
-  async getProjectsByUser(id: string): Promise<ProjectDocument[]> {
+  async getProjectsByUser(id: number): Promise<ProjectDocument[]> {
     try {
       return await this.projectModel.find({owner: id});
     } catch (error) {
