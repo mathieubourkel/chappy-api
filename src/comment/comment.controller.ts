@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Request,
+} from '@nestjs/common';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
 import { CommentInterface, UpdateCommentInterface, } from '../../interfaces/comment.interface';
@@ -11,8 +20,9 @@ export class CommentController extends BaseUtils {
   }
 
 @Post('/comment')
-async createComment(@Body() body:CommentInterface):Promise<unknown> {
+async createComment(@Request() req: Request, @Body() body:CommentInterface):Promise<unknown> {
   try {
+    body.author = req.user.userId
     return await this.uberService.send('POST_COMMENT', body)
   } catch (error) {
     this._catchEx(error)
