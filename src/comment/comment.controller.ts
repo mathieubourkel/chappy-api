@@ -28,7 +28,7 @@ async getCommentById(@Param('id') id: string):Promise<unknown> {
   }
 }
 
-@Get('/comments/:ref/:refId')
+@Get('/comments/:refKey/:refId')
 async getCommentByIdRefModel(@Param() params:{refKey: RefEnumKeys, refId: string}):Promise<unknown> {
   try {
     return await this.uberService.send('GET_COMMENT_BY_REF', params)
@@ -40,6 +40,7 @@ async getCommentByIdRefModel(@Param() params:{refKey: RefEnumKeys, refId: string
 @Patch('/comment/:id')
 async updateComment(@Param('id') id:string, @Body() body:UpdateCommentInterface):Promise<unknown> {
   try {
+    console.log(id, body)
     return await this.uberService.send('PATCH_COMMENT', {id, body})
   } catch (error) {
     this._catchEx(error)
@@ -54,4 +55,5 @@ async deleteComment(@Param('id') id:string):Promise<unknown> {
     this._catchEx(error)
   }
 }
+
 }

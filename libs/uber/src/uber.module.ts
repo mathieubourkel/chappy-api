@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { UberService } from './uber.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({isGlobal: true,} ),
     ClientsModule.register([
       {
         name: 'UBER',
