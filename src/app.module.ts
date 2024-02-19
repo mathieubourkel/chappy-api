@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import * as process from 'process';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -9,6 +9,7 @@ import { ComptaModule } from './compta/compta.module';
 import { LogModule } from './log/log.module';
 import { AuthModule } from './auth/auth.module';
 import { CommentModule } from './comment/comment.module';
+import { verifyRefreshMiddleware, verifyTokenMiddleware } from 'middlewares/tokens.middleware';
 
 @Module({
   imports: [
@@ -21,7 +22,12 @@ import { CommentModule } from './comment/comment.module';
     ComptaModule,
     LogModule,
     AuthModule,
-    CommentModule
+    CommentModule,
   ]
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(verifyTokenMiddleware).forRoutes( 'log', 'step', 'task', 'compta', 'user');
+    consumer.apply(verifyRefreshMiddleware).forRoutes('auth/refreshToken');
+  }
+}

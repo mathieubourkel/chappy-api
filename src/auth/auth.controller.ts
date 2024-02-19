@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res } from '@nestjs/common';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
-import { resourceLimits } from 'worker_threads';
+import { cookieOptions } from 'utils/cookies.options.utils';
 
 @Controller()
 export class AuthController extends BaseUtils {
@@ -15,8 +15,8 @@ export class AuthController extends BaseUtils {
     try {
       const result:any = await this.uberService.send('LOGIN', body)
       if (!result) this._Ex("Failed to LOGIN", 401, "FAILED", "a")
-      res.cookie("refreshToken", result.refreshToken, result.cookieOptions)
-      return result;
+      res.cookie("refreshToken", result.refreshToken, cookieOptions)
+      res.status(200).json(result)
     } catch (error) {
       this._catchEx(error)
     }
@@ -34,9 +34,10 @@ export class AuthController extends BaseUtils {
   @Get('auth/refreshToken')
   async refreshToken(@Req() req: any, @Res() res:any) {
     try {
-      const result:any = await this.uberService.send('REFRESH_TOKEN', req)
+      const result:any = await this.uberService.send('REFRESH_TOKEN', {userId:+req.user.userId, refreshToken: req.cookies.refreshToken})
       if (!result) this._Ex("Failed to REFRESH", 401, "FAILED", "a")
-      res.cookie("refreshToken", result.refreshToken, result.cookieOptions)
+      res.cookie("refreshToken", result.refreshToken, cookieOptions)
+      res.status(200).json(result)
       return result;
     } catch (error) {
       this._catchEx(error)
@@ -64,7 +65,7 @@ export class AuthController extends BaseUtils {
   @Get('user')
     async getInfosUser(@Req() req:any) {
       try {
-        return await this.uberService.send('INFOS_USER', +req.user.userId)
+        return await this.uberService.send('INFOS_USER', {userId:+req.user.userId})
     } catch (error) {
       this._catchEx(error)
     }
