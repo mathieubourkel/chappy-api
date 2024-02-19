@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { ProjectController } from './project.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Project, ProjectSchema, } from './project.schema';
+import { verifyTokenMiddleware } from 'middlewares/tokens.middleware';
 
 @Module({
   imports:[MongooseModule.forFeature([{name: Project.name, schema: ProjectSchema}])],
@@ -10,4 +11,8 @@ import { Project, ProjectSchema, } from './project.schema';
   providers: [ProjectService],
   exports: [ProjectService]
 })
-export class ProjectModule {}
+export class ProjectModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(verifyTokenMiddleware).forRoutes(ProjectController);
+  }
+}

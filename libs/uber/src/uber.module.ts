@@ -11,7 +11,7 @@ import { ConfigModule } from '@nestjs/config';
         name: 'UBER',
         transport: Transport.NATS,
         options: {
-          servers: [`nats://${process.env.BROKER_HOST}:${process.env.BROKER_PORT}`],
+          servers: [`nats://${process.env.BROKER_HOST}:${process.env.BROKER_PORT}`]
         },
       },
     ]),

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Delete, Req } from '@nestjs/common';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
 
@@ -12,6 +12,15 @@ export class LogController extends BaseUtils {
   async getLogsByIdRefModel(@Param() params:{refModel: string, refId: string}):Promise<unknown> {
       try {
           return await this.uberService.send('GET_LOGS', params)
+      } catch (error) {
+          this._catchEx(error)
+      }
+  }
+
+  @Get("notifs")
+  async getNotifsByUser(@Req() req:any):Promise<unknown> {
+      try {
+          return await this.uberService.send('GET_LOGS', {refModel: "notifs", refId: req.user.userId})
       } catch (error) {
           this._catchEx(error)
       }
