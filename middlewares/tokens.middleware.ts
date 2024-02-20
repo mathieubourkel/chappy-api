@@ -24,3 +24,25 @@ export async function verifyRefreshMiddleware(req: Request,res: Response,next: N
     res.status(401).json("FAILED TO REFRESH")
   }
 }
+
+export async function verifyMailMiddleware(req: Request,res: Response,next: NextFunction) {
+  try {
+    const emailToken = req.body.emailToken
+    if (!emailToken) throw {code:"MDW-TK-EMAIL", status: 401, message:"No Email token find"};
+    req["user"] = <CustomJwtPayload>jwt.verify( emailToken, process.env.ACCESS_TOKEN_SECRET );
+    next()
+  } catch (error) {
+    res.status(401).json("FAILED TO MAIL TOKEN")
+  }
+}
+
+export async function verifyValidateAccountMiddleware(req: Request,res: Response,next: NextFunction) {
+  try {
+    const validateToken = req.params.validateToken
+    if (!validateToken) throw {code:"MDW-TK-VALIDATE", status: 401, message:"No ValidateAccount token find"};
+    req["user"] = <CustomJwtPayload>jwt.verify( validateToken, process.env.ACCESS_TOKEN_SECRET );
+    next()
+  } catch (error) {
+    res.status(401).json("FAILED TO VALIDATE ACOUNT TOKEN")
+  }
+}

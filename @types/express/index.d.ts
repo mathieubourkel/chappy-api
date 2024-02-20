@@ -11,5 +11,7 @@ declare module 'express-serve-static-core' {
     export interface CustomJwtPayload extends jwt.JwtPayload {
         userId: number
         email:string
+        firstname: string
+        lastname: string
     }
 }
