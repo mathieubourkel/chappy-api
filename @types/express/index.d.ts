@@ -10,6 +10,8 @@ declare module 'express-serve-static-core' {
   declare module 'jsonwebtoken' {
     export interface CustomJwtPayload extends jwt.JwtPayload {
         userId: number
+        firstname: string
+        lastname: string
         email:string
     }
 }

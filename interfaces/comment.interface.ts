@@ -6,7 +6,7 @@ export interface CommentInterface {
   ref: RefCommentEnum
   refId: string;
   content: string;
-  author: string;
+  author: { id : string, username: string }
   status: StatusCommentEnum;
   medias: string[];
 }
