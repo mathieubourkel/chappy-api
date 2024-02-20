@@ -21,7 +21,7 @@ export class CommentController extends BaseUtils {
 @Post('/comment')
 async createComment(@Req() req: any, @Body() body:CommentInterface):Promise<unknown> {
   try {
-    if (!req.user.userId) this._Ex("USER DON'T EXIST", 404, "USER-NO-EXIST", "/" )
+    if (!req.user.userId) this._Ex("FORBIDDEN-ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
     body.author = String(+req.user.userId)
     return await this.uberService.send('POST_COMMENT', body)
   } catch (error) {
@@ -30,8 +30,9 @@ async createComment(@Req() req: any, @Body() body:CommentInterface):Promise<unkn
 }
 
 @Get('/comment/:id')
-async getCommentById(@Param('id') id: string):Promise<unknown> {
+async getCommentById(@Req() req: any, @Param('id') id: string):Promise<unknown> {
   try {
+    if (!req.user.userId) this._Ex("FORBIDDEN-ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
     return await this.uberService.send('GET_COMMENT', id)
   } catch (error) {
     this._catchEx(error)
@@ -39,8 +40,9 @@ async getCommentById(@Param('id') id: string):Promise<unknown> {
 }
 
 @Get('/comments/:refKey/:refId')
-async getCommentByIdRefModel(@Param() params:{refKey: RefEnumKeys, refId: string}):Promise<unknown> {
+async getCommentByIdRefModel(@Req() req: any, @Param() params:{refKey: RefEnumKeys, refId: string}):Promise<unknown> {
   try {
+    if (!req.user.userId) this._Ex("FORBIDDEN-ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
     return await this.uberService.send('GET_COMMENT_BY_REF', params)
   } catch (error) {
     this._catchEx(error)
@@ -51,7 +53,7 @@ async getCommentByIdRefModel(@Param() params:{refKey: RefEnumKeys, refId: string
 async updateComment(@Param('id') id:string, @Req() req: any, @Body() body:UpdateCommentInterface):Promise<unknown> {
   try {
     const comment:any = await this.uberService.send('GET_COMMENT', id)
-    if (comment.author !== req.user.userId || !req.user.userId ) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
+    if (comment.author !== req.user.userId.toString() || !req.user.userId ) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
     return await this.uberService.send('PATCH_COMMENT', {id, body})
   } catch (error) {
     this._catchEx(error)
@@ -59,10 +61,11 @@ async updateComment(@Param('id') id:string, @Req() req: any, @Body() body:Update
 }
 
 @Delete('/comment/:id')
-async deleteComment(@Param('id') @Req() req: any, id:string):Promise<unknown> {
+async deleteComment(@Param('id') id:string, @Req() req: any ):Promise<unknown> {
   try {
     const comment:any = await this.uberService.send('GET_COMMENT', id)
-    if (comment.author !== req.user.userId || !req.user.userId ) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
+    console.log(comment)
+    if (comment.author !== req.user.userId.toString() || !req.user.userId ) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
     return await this.uberService.send('DELETE_COMMENT', id)
   } catch (error) {
     this._catchEx(error)

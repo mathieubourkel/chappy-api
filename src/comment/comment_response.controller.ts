@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
 import {
@@ -16,8 +25,10 @@ export class CommentResponseController extends BaseUtils {
   }
 
 @Post('/response')
-async createResponseComment(@Body() body:ResponseCommentInterface):Promise<unknown> {
+async createResponseComment(@Req() req: any, @Body() body:ResponseCommentInterface):Promise<unknown> {
   try {
+    if (!req.user.userId) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
+    body.author = String(+req.user.userId)
     return await this.uberService.send('POST_RESPONSE_COMMENT', body)
   } catch (error) {
     this._catchEx(error)
@@ -25,8 +36,9 @@ async createResponseComment(@Body() body:ResponseCommentInterface):Promise<unkno
 }
 
 @Get('/response/:id')
-async getResponseCommentById(@Param() id: string):Promise<unknown> {
+async getResponseCommentById(@Req() req: any, @Param() id: string):Promise<unknown> {
   try {
+    if (!req.user.userId) this._Ex("FORBIDDEN-ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
     return await this.uberService.send('GET_RESPONSE_COMMENT', id)
   } catch (error) {
     this._catchEx(error)
@@ -34,18 +46,20 @@ async getResponseCommentById(@Param() id: string):Promise<unknown> {
 }
 
 @Get('/comment/response/:idComment')
-async getResponseCommentByIdComment(@Param() idComment: string):Promise<unknown> {
+async getResponseCommentByIdComment(@Req() req: any, @Param() idComment: string):Promise<unknown> {
   try {
-    return await this.uberService.send('GET_RESPONSE_COMMENT_OF_COMMENT', idComment)
+    if (!req.user.userId) this._Ex("FORBIDDEN-ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
+    return await this.uberService.send('GET_RESPONSE_OF_COMMENT', idComment)
   } catch (error) {
     this._catchEx(error)
   }
 }
 
 @Patch('/response/:id')
-async updateResponseComment(@Param('id') id:string, @Body() body:UpdateResponseCommentInterface):Promise<unknown> {
+async updateResponseComment(@Param('id') id:string, @Req() req: any, @Body() body:UpdateResponseCommentInterface):Promise<unknown> {
   try {
-    console.log(id, body)
+    const response:any = await this.uberService.send('GET_RESPONSE_COMMENT', id)
+    if (response.author !== req.user.userId.toString() || !req.user.userId ) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
     return await this.uberService.send('PATCH_RESPONSE_COMMENT', {id, body})
   } catch (error) {
     this._catchEx(error)
@@ -53,8 +67,10 @@ async updateResponseComment(@Param('id') id:string, @Body() body:UpdateResponseC
 }
 
 @Delete('/response/:id')
-async deleteResponseComment(@Param('id') id:string):Promise<unknown> {
+async deleteResponseComment(@Req() req: any, @Param('id') id:string):Promise<unknown> {
   try {
+    const response:any = await this.uberService.send('GET_RESPONSE_COMMENT', id)
+    if (response.author !== req.user.userId.toString() || !req.user.userId ) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
     return await this.uberService.send('DELETE_RESPONSE_COMMENT', id)
   } catch (error) {
     this._catchEx(error)
