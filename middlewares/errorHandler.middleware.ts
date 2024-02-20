@@ -10,6 +10,7 @@ import {
   export class ErrorHandlerMiddleware implements ExceptionFilter {
     constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
     catch(exception: any, host: ArgumentsHost): void {
+      console.log(exception)
       const { httpAdapter } = this.httpAdapterHost;
       const ctx = host.switchToHttp();
       let responseBody:any
@@ -23,7 +24,7 @@ import {
         }
         : responseBody = {
             statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-            message: exception.message,
+            message: exception,
             timestamp: new Date().toISOString(),
             path: httpAdapter.getRequestUrl(ctx.getRequest()),
             

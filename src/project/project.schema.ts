@@ -17,7 +17,7 @@ export class Project {
 
   @Prop({required:true,})
   @IsString()
-  owner: string;
+  owner: number;
 
   @Prop({required:true})
   code: string;
@@ -26,7 +26,7 @@ export class Project {
   status: StatusProjectEnum;
 
   @Prop({required:true})
-  globalBudget: number;
+  budget: number;
 
   @Prop({required:true})
   estimEndDate: Date;
@@ -38,7 +38,7 @@ export class Project {
   tasks: Task[] | Types.ObjectId[];
 
   @Prop()
-  members: string[];
+  members: number[];
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

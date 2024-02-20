@@ -37,7 +37,7 @@ export class TaskService extends BaseUtils {
     }
   }
 
-  async getTasksByUser(id:string): Promise<TaskDocument[]> {
+  async getTasksByUser(id:number): Promise<TaskDocument[]> {
     try {
       return await this.taskModel.find({owner: id});
     } catch (error) {
@@ -45,17 +45,17 @@ export class TaskService extends BaseUtils {
     }
   }
 
-  async getTasksByIdProject(id: string): Promise<TaskDocument[]> {
+  async getTasksByIdProject(_id: string): Promise<TaskDocument[]> {
     try {
-      return await this.taskModel.find({project: id});
+      return await this.taskModel.find({project: _id});
     } catch (error) {
       this._catchEx(error)
     }
   }
 
-  async getTasksByIdStep(id: string): Promise<TaskDocument[]> {
+  async getTasksByIdStep(_id: string): Promise<TaskDocument[]> {
     try {
-      return await this.taskModel.find({step: id});
+      return await this.taskModel.find({step: _id});
     } catch (error) {
       this._catchEx(error)
     }
