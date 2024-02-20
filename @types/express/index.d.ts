@@ -13,5 +13,7 @@ declare module 'express-serve-static-core' {
         firstname: string
         lastname: string
         email:string
+        firstname: string
+        lastname: string
     }
 }
