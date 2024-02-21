@@ -28,7 +28,7 @@ export class CommentResponseController extends BaseUtils {
 async createResponseComment(@Req() req: any, @Body() body:ResponseCommentInterface):Promise<unknown> {
   try {
     if (!req.user.userId) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
-    body.author = String(+req.user.userId)
+    body.author = { id : String(+req.user.userId), username : `${req.user.lastname} ${req.user.firstname}` }
     return await this.uberService.send('POST_RESPONSE_COMMENT', body)
   } catch (error) {
     this._catchEx(error)
@@ -59,7 +59,7 @@ async getResponseCommentByIdComment(@Req() req: any, @Param() idComment: string)
 async updateResponseComment(@Param('id') id:string, @Req() req: any, @Body() body:UpdateResponseCommentInterface):Promise<unknown> {
   try {
     const response:any = await this.uberService.send('GET_RESPONSE_COMMENT', id)
-    if (response.author !== req.user.userId.toString() || !req.user.userId ) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
+    if (response.author.id !== req.user.userId.toString() || !req.user.userId ) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
     return await this.uberService.send('PATCH_RESPONSE_COMMENT', {id, body})
   } catch (error) {
     this._catchEx(error)
@@ -70,7 +70,7 @@ async updateResponseComment(@Param('id') id:string, @Req() req: any, @Body() bod
 async deleteResponseComment(@Req() req: any, @Param('id') id:string):Promise<unknown> {
   try {
     const response:any = await this.uberService.send('GET_RESPONSE_COMMENT', id)
-    if (response.author !== req.user.userId.toString() || !req.user.userId ) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
+    if (response.author.id !== req.user.userId.toString() || !req.user.userId ) this._Ex("FORBIDDEN ACCESS", 403, "FORBIDDEN-ACCESS", "/" )
     return await this.uberService.send('DELETE_RESPONSE_COMMENT', id)
   } catch (error) {
     this._catchEx(error)
