@@ -3,10 +3,16 @@ import { AppModule } from './app.module';
 import { ErrorHandlerMiddleware } from '../middlewares/errorHandler.middleware';
 import { corsOptions } from 'utils/cors.options.utils';
 import * as cookieParser from "cookie-parser";
-import { verifyRefreshMiddleware, verifyTokenMiddleware } from 'middlewares/tokens.middleware';
+import { httpsOptions } from 'utils/https.options.utils';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  let app;
+  if (process.env.NODE_ENV == 'production'){
+    app = await NestFactory.create(AppModule, { httpsOptions});
+  } else {
+    app = await NestFactory.create(AppModule);
+  }
+  
   const httpAdapter = app.get(HttpAdapterHost);
   app.enableCors(corsOptions);
   app.use(cookieParser());
