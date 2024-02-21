@@ -31,6 +31,6 @@ export class CreateProjectDto {
   @IsDateString()
   estimEndDate:Date;
   code:string;
-  owner:number;
+  owner: {id: number, email:string}
 
 }

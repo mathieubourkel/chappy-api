@@ -22,6 +22,7 @@ export class ComptaController extends BaseUtils {
   async createCompta(@Body() body:any, @Req() req:any):Promise<unknown> {
     try {
         body.owner = +req.user.userId
+        console.log(body)
         return await this.uberService.send('POST_COMPTA', body)
     } catch (error) {
         this._catchEx(error)

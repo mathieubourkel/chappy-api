@@ -18,13 +18,12 @@ import { StepDocument } from '../step/step.schema';
 import {
   BaseUtils
 } from '../../libs/base/base.utils';
+import { removeIdFromArray } from 'utils/removeObjInArray.utils';
 
 @Controller()
 export class TaskController extends BaseUtils {
   constructor(
-    private readonly taskService: TaskService,
-    private readonly stepService: StepService
-  ) {
+    private readonly taskService: TaskService) {
     super()
   }
 
@@ -32,7 +31,7 @@ export class TaskController extends BaseUtils {
   async create(
     @Body(new ValidationPipe()) body: CreateTaskDto, @Req() req:any) :Promise<TaskDocument> {
     try {
-      const task:TaskDocument = await this.taskService.create({...body, owner: +req.user.userId});
+      const task:TaskDocument = await this.taskService.create({...body, owner: {id:+req.user.userId, email: req.user.email}});
     //  const projectOfStep:StepDocument = await this.stepService.getStepById(body.step.toString())
    //   if (!task || projectOfStep.project.toString() !== task.project.toString()) this._Ex("TASK CREATION FAILED", 400, "TC-BUILD-FAILED", "/" )
       return task;
@@ -89,6 +88,19 @@ export class TaskController extends BaseUtils {
     try {
       const task:Partial<TaskDocument> = await this.taskService.update(id, body);
       if (!task) this._Ex("UPDATE FAILED", 400, "TC-TASK-NOTUP", "/" )
+      return task;
+    } catch (error) {
+      this._catchEx(error)
+    }
+  }
+
+  @Put('/task/members/delete')
+  async deleteUserFromTask(@Body() body: any) {
+    try {
+      const task:any = await this.taskService.getTaskById(body.idTask)
+      removeIdFromArray(task.members, body.idUser)
+      await this.taskService.updateTaskMembers(task._id, task.members);
+      if (!task) this._Ex("UPDATE FAILED", 400, "TS-PROJ-NOTUP", "/" )
       return task;
     } catch (error) {
       this._catchEx(error)

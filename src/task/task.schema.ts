@@ -25,10 +25,8 @@ export class Task {
   @Prop({required:true})
   description: string;
 
-  @IsNotEmpty()
-  @IsInt()
-  @Prop({required:true})
-  owner: number;
+  @Prop({type: { id: Number, email: String },_id: false, required:true})
+  owner: {id: number, email:string};
 
   @Prop({type: ()=> StatusTaskEnum, required:true, default: StatusTaskEnum.IN_PROGRESS })
   status: StatusTaskEnum;
@@ -53,8 +51,8 @@ export class Task {
   @Prop({ type: Types.ObjectId, ref: 'Step' })
   step: Step | Types.ObjectId;
 
-  @Prop()
-  members: number[]
+  @Prop({type: [{id: Number, email: String}], _id:false})
+  members: [{id: number, email:string}]
 
 }
 

@@ -39,7 +39,7 @@ export class TaskService extends BaseUtils {
 
   async getTasksByUser(id:number): Promise<TaskDocument[]> {
     try {
-      return await this.taskModel.find({owner: id});
+      return await this.taskModel.find({'owner.id': id});
     } catch (error) {
       this._catchEx(error)
     }
@@ -64,6 +64,14 @@ export class TaskService extends BaseUtils {
   async update(_id: string, body: UpdateTaskDto): Promise<Partial<TaskDocument>> {
     try {
       return await this.taskModel.findOneAndUpdate({ _id }, body, {new : true});
+    } catch (error) {
+      this._catchEx(error)
+    }
+  }
+
+  async updateTaskMembers(_id: string, newArr:[{id: number, email:string}]) {
+    try {
+      return await this.taskModel.findOneAndUpdate({ _id }, {members: newArr}, {new : true});
     } catch (error) {
       this._catchEx(error)
     }

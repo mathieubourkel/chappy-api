@@ -40,5 +40,5 @@ export class CreateTaskDto {
 
   @IsMongoId()
   step: Types.ObjectId
-  owner: number
+  owner: {id: number, email:string}
 }

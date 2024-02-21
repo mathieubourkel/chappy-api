@@ -5,10 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Project, ProjectSchema, } from './project.schema';
 import { verifyTokenMiddleware } from 'middlewares/tokens.middleware';
 import {StepModule} from "../step/step.module"
+import { UberModule } from '@app/uber/uber.module';
 
 @Module({
   imports:[MongooseModule.forFeature([{name: Project.name, schema: ProjectSchema}]),
-StepModule],
+StepModule, UberModule],
   controllers: [ProjectController],
   providers: [ProjectService],
   exports: [ProjectService]

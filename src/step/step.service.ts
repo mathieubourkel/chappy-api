@@ -26,7 +26,7 @@ export class StepService extends BaseUtils {
 
   async getStepById(_id: string) : Promise<StepDocument> {
     try {
-      return await this.stepModel.findOne({ _id }).populate("project");
+      return await this.stepModel.findOne({ _id }).populate(["project", "project.members"]);
     } catch (error) {
       this._catchEx(error)
     }

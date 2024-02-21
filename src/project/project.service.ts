@@ -35,7 +35,15 @@ export class ProjectService extends BaseUtils {
 
   async getProjectsByUser(id: number): Promise<ProjectDocument[]> {
     try {
-      return await this.projectModel.find({owner: id});
+      return await this.projectModel.find({'owner.id': id});
+    } catch (error) {
+      this._catchEx(error)
+    }
+  }
+
+  async getProjectsIfMembers(id: number): Promise<ProjectDocument[]> {
+    try {
+      return await this.projectModel.find({'members': { $elemMatch: { 'id': id } }});
     } catch (error) {
       this._catchEx(error)
     }
@@ -45,6 +53,14 @@ export class ProjectService extends BaseUtils {
     try {
       // @ts-ignore
       return await this.projectModel.findOneAndUpdate({ _id }, body, {new : true});
+    } catch (error) {
+      this._catchEx(error)
+    }
+  }
+
+  async updateProjectMembers(_id: string, newArr:[{id: number, email:string}]) {
+    try {
+      return await this.projectModel.findOneAndUpdate({ _id }, {members: newArr}, {new : true});
     } catch (error) {
       this._catchEx(error)
     }
