@@ -9,7 +9,7 @@ import { ComptaModule } from './compta/compta.module';
 import { LogModule } from './log/log.module';
 import { AuthModule } from './auth/auth.module';
 import { CommentModule } from './comment/comment.module';
-import { verifyRefreshMiddleware, verifyTokenMiddleware } from 'middlewares/tokens.middleware';
+import { verifyMailMiddleware, verifyRefreshMiddleware, verifyTokenMiddleware, verifyValidateAccountMiddleware } from 'middlewares/tokens.middleware';
 
 @Module({
   imports: [
@@ -29,5 +29,7 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(verifyTokenMiddleware).forRoutes( 'log', 'step','compta', 'user', 'group');
     consumer.apply(verifyRefreshMiddleware).forRoutes('auth/refreshToken');
+    consumer.apply(verifyMailMiddleware).forRoutes('auth/resetPwd/withMail');
+    consumer.apply(verifyValidateAccountMiddleware).forRoutes('auth/validateAccount/:validateToken');
   }
 }

@@ -39,9 +39,9 @@ export class ComptaController extends BaseUtils {
   }
 
   @Delete(":id")
-  async deleteCompta(@Param() id:string):Promise<unknown> {
+  async deleteCompta(@Param('id') _id:string):Promise<unknown> {
     try {
-        return await this.uberService.send('DELETE_COMPTA', id)  
+        return await this.uberService.send('DELETE_COMPTA', _id)  
     } catch (error) {
         this._catchEx(error)
     }
