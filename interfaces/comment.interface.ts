@@ -19,7 +19,7 @@ export interface UpdateCommentInterface {
 export interface ResponseCommentInterface {
   commentId: Types.ObjectId;
   content: string;
-  author: string;
+  author: { id : string, username: string }
   status: StatusCommentEnum;
   medias: string[];
 }
