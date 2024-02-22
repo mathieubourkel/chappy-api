@@ -26,9 +26,7 @@ export class StepController extends BaseUtils {
   @Post()
   async create(@Body(new ValidationPipe()) body: CreateStepDto) : Promise<StepDocument> {
     try {
-      const step:StepDocument = await this.stepService.create(body);
-      if (!step) this._Ex("STEP CREATION FAILED", 400, "SC-BUILD-FAILED", "/" )
-      return step;
+      return await this.stepService.create(body);
     } catch (error) {
       this._catchEx(error)
     }
@@ -59,9 +57,13 @@ export class StepController extends BaseUtils {
 
   @Delete(':id')
   delete(@Param('id') id: string):Promise<StepDocument> {
-    const step:Promise<StepDocument> = this.stepService.delete(id);
+    try {
+      const step:Promise<StepDocument> = this.stepService.delete(id);
     if (!step) this._Ex("DELETE FAILED", 403, "SC-NO-DELETE", "/" );
     return step;
+    } catch (error) {
+      this._catchEx(error)
+    }
   }
 }
 

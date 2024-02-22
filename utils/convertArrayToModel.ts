@@ -1,8 +1,9 @@
 import { LogsModelEnum } from "enums/logs.model.enum"
 
 export const convertArrayOfUserToModelNotif = (array:any[]) => {
+    let tmpArray:any[] = []
     array.map((user:any) => {
-        return {refId: user.id, refModel: LogsModelEnum.notif}
+        tmpArray.push({refId: user.id, refModel: LogsModelEnum.notifs})
     })
-    return array;
+    return tmpArray
 }

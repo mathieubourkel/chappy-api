@@ -13,13 +13,10 @@ import {
 @Injectable()
 export class TaskService extends BaseUtils {
 
-  constructor(
-    @InjectModel(Task.name)
-    private taskModel: Model<TaskDocument>) {
+  constructor(@InjectModel(Task.name) private taskModel: Model<TaskDocument>) {
     super()
   }
-
-
+  
   async create(body: CreateTaskDto) :Promise<TaskDocument> {
     try {
       const task = new this.taskModel(body);

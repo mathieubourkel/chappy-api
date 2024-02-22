@@ -13,8 +13,6 @@ import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskDocument } from './task.schema';
-import { StepService } from '../step/step.service';
-import { StepDocument } from '../step/step.schema';
 import {
   BaseUtils
 } from '../../libs/base/base.utils';
@@ -22,6 +20,7 @@ import { removeIdFromArray } from 'utils/removeObjInArray.utils';
 import { UberService } from '@app/uber/uber.service';
 import { convertArrayOfUserToModelNotif } from 'utils/convertArrayToModel';
 import { LogsStatusEnum } from 'enums/logs.status.enum';
+import { Request } from 'express';
 
 @Controller()
 export class TaskController extends BaseUtils {
@@ -33,7 +32,7 @@ export class TaskController extends BaseUtils {
 
   @Post("/task")
   async create(
-    @Body(new ValidationPipe()) body: CreateTaskDto, @Req() req:any) :Promise<TaskDocument> {
+    @Body(new ValidationPipe()) body: CreateTaskDto, @Req() req:Request) :Promise<TaskDocument> {
     try {
       const task:TaskDocument = await this.taskService.create({...body, owner: {id:+req.user.userId, email: req.user.email}});
     //  const projectOfStep:StepDocument = await this.stepService.getStepById(body.step.toString())
@@ -60,9 +59,8 @@ export class TaskController extends BaseUtils {
   }
 
   @Get('/my-tasks')
-  async findTasksByOwner(@Req() req:any): Promise<TaskDocument[]> {
+  async findTasksByOwner(@Req() req:Request): Promise<TaskDocument[]> {
     try {
-      if (!req.user.userId) this._Ex("USER DON'T EXIST", 404, "USER-NO-EXIST", "/" )
       return await this.taskService.getTasksByUser(+req.user.userId);
     } catch (error) {
       this._catchEx(error)
@@ -103,7 +101,7 @@ export class TaskController extends BaseUtils {
   }
 
   @Put('/task/members/delete')
-  async deleteUserFromTask(@Body() body: any) {
+  async deleteUserFromTask(@Body() body: {idTask: string, idUser:number}):Promise<TaskDocument> {
     try {
       const task:any = await this.taskService.getTaskById(body.idTask)
       removeIdFromArray(task.members, body.idUser)
@@ -116,9 +114,11 @@ export class TaskController extends BaseUtils {
   }
 
   @Delete('/task/:id')
-  delete(@Param('id') id: string):Promise<TaskDocument> {
-    const task:Promise<TaskDocument> =  this.taskService.delete(id);
-    if (!task) this._Ex("DELETE FAILED", 403, "TC-NO-DELETE", "/" );
-    return task;
+  async delete(@Param('id') id: string):Promise<TaskDocument> {
+    try {
+      return await this.taskService.delete(id);
+    } catch (error) {
+      this._catchEx(error)
+    }
   }
 }

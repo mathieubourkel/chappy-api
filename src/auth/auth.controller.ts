@@ -5,6 +5,9 @@ import { ProjectService } from "../project/project.service"
 import { cookieOptions } from 'utils/cookies.options.utils';
 import { Request, Response } from 'express';
 import { DemandsStatusEnum } from 'enums/demands.status.enum';
+import { intUser } from 'interfaces/user.interface';
+import { intRegister } from 'interfaces/auth.interface';
+import { intCompany } from 'interfaces/company.interface';
 
 @Controller()
 export class AuthController extends BaseUtils {
@@ -15,7 +18,7 @@ export class AuthController extends BaseUtils {
   }
   
   @Post('auth/login')
-  async login(@Body() body: any, @Res() res:Response) {
+  async login(@Body() body: {email:string, password:string}, @Res() res:Response):Promise<any> {
     try {
       const result:any = await this.uberService.send('LOGIN', body)
       if (!result) this._Ex("Failed to LOGIN", 401, "FAILED", "a")
@@ -27,7 +30,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Post('auth/register')
-  async register(@Body() body: any) {
+  async register(@Body() body: intUser):Promise<unknown> {
     try {
       const result:any = await this.uberService.send('REGISTER', body)
       await this.uberService.emit('SEND_MAIL_CONFIRM_ACCOUNT', {emailAddress: result.email, confirmUrl: `${process.env.VITE_PROTOCOL}://${process.env.VITE_BACK_HOST}:${process.env.VITE_BACK_PORT}/auth/validateAccount/${result.validationToken}`})
@@ -38,7 +41,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Post('auth/registerWithCompany')
-  async registerWithCompany(@Body() body: any) {
+  async registerWithCompany(@Body() body: intRegister):Promise<unknown> {
     try {
       const result:any = await this.uberService.send('REGISTER', body)
       await this.uberService.emit('SEND_MAIL_CONFIRM_ACCOUNT', {emailAddress: result.email, confirmUrl: `${process.env.VITE_PROTOCOL}://${process.env.VITE_BACK_HOST}:${process.env.VITE_BACK_PORT}/auth/validateAccount/${result.validationToken}`})
@@ -52,7 +55,7 @@ export class AuthController extends BaseUtils {
 
 
   @Get('auth/validateAccount/:validateToken')
-  async validateAccount(@Req() req:any, @Res() res:Response) {
+  async validateAccount(@Req() req:Request, @Res() res:Response):Promise<any> {
     try {
       const user:any = await this.uberService.send('GET_ONE_LIGHT_USER', {id: +req.user.userId})
       const validate = await this.uberService.send('VALIDATE_USER', user)
@@ -64,20 +67,19 @@ export class AuthController extends BaseUtils {
   }
 
   @Get('auth/refreshToken')
-  async refreshToken(@Req() req: any, @Res() res:Response) {
+  async refreshToken(@Req() req: Request, @Res() res:Response):Promise<any> {
     try {
       const result:any = await this.uberService.send('REFRESH_TOKEN', {userId:+req.user.userId, refreshToken: req.cookies.refreshToken})
       if (!result) this._Ex("Failed to REFRESH", 401, "FAILED", "a")
       res.cookie("refreshToken", result.refreshToken, cookieOptions)
       res.status(200).json(result)
-      return result;
     } catch (error) {
       this._catchEx(error)
     }
   }
 
   @Get('auth/emailToken/:token')
-  async getEmailToken(@Param('token') token:string) {
+  async getEmailToken(@Param('token') token:string):Promise<unknown> {
     try {
       return await this.uberService.send('GET_EMAIL_TOKEN', {emailToken: token})
     } catch (error) {
@@ -86,7 +88,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Post('auth/resetPwd/sendMail')
-  async sendMailForResetPwd(@Body() body: any) {
+  async sendMailForResetPwd(@Body() body: {email:string}):Promise<string> {
     try {
       const result:any = await this.uberService.send('CREATE_EMAIL_TOKEN', {email: body.email})
       await this.uberService.emit('SEND_MAIL_RESET_PWD', {emailAddress: body.email, confirmUrl: `${process.env.VITE_PROTOCOL}://${process.env.FRONT_HOST}:${process.env.FRONT_PORT}/forgot-pwd/${result.emailToken}`})
@@ -97,7 +99,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Post('auth/resetPwd/withMail')
-  async resetPwdWithMail(@Body() body: any, @Req() req: Request) {
+  async resetPwdWithMail(@Body() body: {newPwd:string, emailToken:string}, @Req() req: Request):Promise<unknown> {
     try {
       const user:any = await this.uberService.send('GET_ONE_LIGHT_USER', {id: +req.user.userId})
       return await this.uberService.send('RESET_PWD_WITHOUT_CHECK', {newPwd: body.newPwd, user})
@@ -107,18 +109,18 @@ export class AuthController extends BaseUtils {
   }
 
   @Put('user/resetPwd')
-  async resetPwdWhenLogged(@Body() body: any, @Req() req:Request) {
+  async resetPwdWhenLogged(@Body() body: {newPwd:string, oldPwd:string}, @Req() req:Request):Promise<unknown> {
     try {
       const user:any = await this.uberService.send('GET_USER_WITH_PWD', {id: +req.user.userId})
       if (!user) this._Ex("FAILED TO RESET PWD", 400, "CTRL/RST/PWD", "")
-      return await this.uberService.send('RESET_PWD', {oldPwd: body.oldPassword, newPwd: body.newPassword, user})
+      return await this.uberService.send('RESET_PWD', {oldPwd: body.oldPwd, newPwd: body.newPwd, user})
     } catch (error) {
       this._catchEx(error)
     }
   }
 
   @Get('user/all')
-  async getAllUsers() {
+  async getAllUsers():Promise<unknown> {
     try {
       return await this.uberService.send('ALL_USERS', {})
     } catch (error) {
@@ -127,21 +129,21 @@ export class AuthController extends BaseUtils {
   }
 
   @Get('user')
-    async getInfosUser(@Req() req:Request) {
+    async getInfosUser(@Req() req:Request):Promise<unknown> {
       try {
         const infosUser:any = await this.uberService.send('GET_USER_BYID', +req.user.userId)
         const infosProject = await this.projectService.getProjectsByUser(req.user.userId);
         infosUser.projects = infosProject
         infosUser.participations = []
         infosUser.myOwnTasks = []
-        return infosUser
+        return infosUser;
     } catch (error) {
       this._catchEx(error)
     }
   }
 
   @Put('user')
-    async modifyUser(@Body() body: any, @Req() req:Request) {
+    async modifyUser(@Body() body: any, @Req() req:Request):Promise<unknown> {
       try {
         return await this.uberService.send('MODIFY_USER', {body, userId: +req.user.userId})
     } catch (error) {
@@ -150,7 +152,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Delete('user/my-account')
-    async deleteMyAccount(@Req() req:Request) {
+    async deleteMyAccount(@Req() req:Request):Promise<unknown> {
       try {
         return await this.uberService.send('DELETE_USER', {id:+req.user.userId})
     } catch (error) {
@@ -159,7 +161,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Delete('user/:id')
-    async deleteRandomUser(@Param() id:string, @Req() req:Request) {
+    async deleteRandomUser(@Param() id:string, @Req() req:Request):Promise<unknown> {
       try {
         if (+req.user.userId !== 29387387) this._Ex("NO ADMIN", 403, "NOADM", "NOADM")
         return await this.uberService.send('DELETE_USER', {id:+id})
@@ -169,7 +171,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Get('group/all')
-  async getAllGroups() {
+  async getAllGroups():Promise<unknown> {
     try {
       return await this.uberService.send('ALL_GROUPS', {})
     } catch (error) {
@@ -178,7 +180,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Put('group/:id')
-    async modifyGroup(@Body() body: any, @Param() id:string) {
+    async modifyGroup(@Body() body: intCompany, @Param() id:string):Promise<unknown> {
       try {
         return await this.uberService.send('MODIFY_GROUP', {body, userId: +id})
     } catch (error) {
@@ -187,7 +189,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Post('group')
-    async addGroup(@Body() body: any, @Req() req:Request) {
+    async addGroup(@Body() body: intCompany, @Req() req:Request):Promise<unknown> {
       try {
         const user:any = await this.uberService.send('GET_ONE_LIGHT_USER', {id: +req.user.userId})
         body.owner = user;
@@ -198,7 +200,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Get('group/demand/add/:idGroup')
-    async addGroupDemand(@Req() req:Request) {
+    async addGroupDemand(@Req() req:Request):Promise<unknown> {
       try {
         return await this.uberService.send('CREATE_DEMAND', {idUser: +req.user.userId, idGroup: req.params.idGroup})
     } catch (error) {
@@ -207,7 +209,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Get('group/demand/valid/:id')
-    async validDemand(@Param('id') id:string, @Req() req:Request) {
+    async validDemand(@Param('id') id:string, @Req() req:Request):Promise<unknown> {
       try {
         const demand:any = await this.uberService.send("GET_ONE_DEMAND", {idDemand:+id})
         const group:any = await this.uberService.send("GET_ONE_GROUP", {idGroup: demand.group.id})
@@ -219,7 +221,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Get('group/demand/refuse/:id')
-    async refuseDemand(@Param('id') id:string, @Req() req:Request) {
+    async refuseDemand(@Param('id') id:string, @Req() req:Request):Promise<unknown> {
       try {
         const demand:any = await this.uberService.send("GET_ONE_DEMAND", {idDemand:+id})
         const group:any = await this.uberService.send("GET_ONE_GROUP", {idGroup: demand.group.id})
@@ -231,7 +233,7 @@ export class AuthController extends BaseUtils {
   }
 
   @Get('group/demand/quit/:id')
-    async quitCompany(@Param('id') id:string, @Req() req:Request) {
+    async quitCompany(@Param('id') id:string, @Req() req:Request):Promise<unknown> {
       try {
         const demand:any = await this.uberService.send("GET_ONE_DEMAND", {idDemand:+id})
         if (demand.user.id != req.user.userId) this._Ex("NO RIGHTS", 403, "DEMAND","")
@@ -243,7 +245,7 @@ export class AuthController extends BaseUtils {
 
 
   @Delete('group/:id')
-    async deleteGroup(@Param('id') id:string, @Req() req:Request) {
+    async deleteGroup(@Param('id') id:string, @Req() req:Request):Promise<unknown> {
       try {
         return await this.uberService.send('DELETE_GROUP', {groupId:+id, userId: +req.user.userId})
     } catch (error) {

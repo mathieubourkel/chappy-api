@@ -58,7 +58,7 @@ export class ProjectService extends BaseUtils {
     }
   }
 
-  async updateProjectMembers(_id: string, newArr:[{id: number, email:string}]) {
+  async updateProjectMembers(_id: string, newArr:[{id: number, email:string}]):Promise<ProjectDocument> {
     try {
       return await this.projectModel.findOneAndUpdate({ _id }, {members: newArr}, {new : true});
     } catch (error) {

@@ -1,5 +1,5 @@
 export enum LogsModelEnum {
-    notif,    // Notif USER
+    notifs,    // Notif USER
     project,  // log PROJECT
     step,     // log STEP
     comment,   // log Comment

@@ -1,6 +1,9 @@
 import { Body, Controller, Get, Param, Put, Delete, Req } from '@nestjs/common';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
+import { LogsModelEnum } from 'enums/logs.model.enum';
+import { LogsStatusEnum } from 'enums/logs.status.enum';
+import { Request } from 'express';
 
 @Controller("log")
 export class LogController extends BaseUtils {
@@ -11,25 +14,25 @@ export class LogController extends BaseUtils {
   @Get(":refModel/:refId")
   async getLogsByIdRefModel(@Param() params:{refModel: string, refId: string}):Promise<unknown> {
       try {
-          return await this.uberService.send('GET_LOGS', params)
+          return await this.uberService.send('GET_LOGS_BY_MODEL', params)
       } catch (error) {
           this._catchEx(error)
       }
   }
 
   @Get("notifs")
-  async getNotifsByUser(@Req() req:any):Promise<unknown> {
+  async getNotifsByUser(@Req() req:Request):Promise<unknown> {
       try {
-          return await this.uberService.send('GET_LOGS', {refModel: "notifs", refId: req.user.userId})
+          return await this.uberService.send('GET_LOGS_BY_MODEL_AND_STATUS', {refModel: LogsModelEnum.notifs, refId: +req.user.userId, status:LogsStatusEnum.NEW})
       } catch (error) {
           this._catchEx(error)
       }
   }
 
-  @Put(":id")
-  async modifyStatusLog(@Param('id') id:string, @Body() body:any):Promise<unknown> {
+  @Get("notif/view/:id")
+  async modifyStatusLog(@Param('id') _id:string):Promise<unknown> {
       try {
-        return await this.uberService.send('MODIFY_STATUS_LOG', {id, body})
+        return await this.uberService.send('MODIFY_STATUS_LOG', {_id, status: LogsStatusEnum.OLD})
       } catch (error) {
           this._catchEx(error)
       }
@@ -45,9 +48,9 @@ export class LogController extends BaseUtils {
   }
 
   @Delete("clean")
-  async deleteManyLogs(@Body() body:any):Promise<unknown> {
+  async deleteManyLogs(@Body() body:{date:Date}):Promise<unknown> {
     try {
-        return await this.uberService.send('DELETE_MANY_LOGS', body) 
+        return await this.uberService.send('DELETE_MANY_LOGS_BY_DATE', {date:body.date}) 
     } catch (error) {
         this._catchEx(error)
     }

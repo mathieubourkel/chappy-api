@@ -5,7 +5,6 @@ import { corsOptions } from 'utils/cors.options.utils';
 import * as cookieParser from "cookie-parser";
 import * as fs from "fs"
 
-
 async function bootstrap() {
   let app;
   if (process.env.NODE_ENV == 'production'){
@@ -22,8 +21,10 @@ async function bootstrap() {
   app.enableCors(corsOptions);
   app.use(cookieParser());
   app.useGlobalFilters(new ErrorHandlerMiddleware(httpAdapter));
+
   await app.listen(process.env.VITE_BACK_PORT, () => {
     console.log(`MAIN LISTEN on ${process.env.VITE_BACK_HOST}:${process.env.VITE_BACK_PORT}`)
   });
 }
+
 bootstrap();
