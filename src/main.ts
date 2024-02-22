@@ -5,14 +5,14 @@ import { corsOptions } from 'utils/cors.options.utils';
 import * as cookieParser from "cookie-parser";
 import * as fs from "fs"
 
-const httpsOptions = {
-  key: fs.readFileSync(process.env.BACK_URL_KEY, 'utf-8'),
-  cert: fs.readFileSync(process.env.BACK_URL_CERT, 'utf-8'),
-};
 
 async function bootstrap() {
   let app;
   if (process.env.NODE_ENV == 'production'){
+    const httpsOptions = {
+      key: fs.readFileSync(process.env.BACK_URL_KEY, 'utf-8'),
+      cert: fs.readFileSync(process.env.BACK_URL_CERT, 'utf-8'),
+    };
     app = await NestFactory.create(AppModule, { httpsOptions});
   } else {
     app = await NestFactory.create(AppModule);

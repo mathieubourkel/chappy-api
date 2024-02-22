@@ -19,11 +19,15 @@ import {
   BaseUtils
 } from '../../libs/base/base.utils';
 import { removeIdFromArray } from 'utils/removeObjInArray.utils';
+import { UberService } from '@app/uber/uber.service';
+import { convertArrayOfUserToModelNotif } from 'utils/convertArrayToModel';
+import { LogsStatusEnum } from 'enums/logs.status.enum';
 
 @Controller()
 export class TaskController extends BaseUtils {
   constructor(
-    private readonly taskService: TaskService) {
+    private readonly taskService: TaskService,
+    private readonly uberService: UberService) {
     super()
   }
 
@@ -34,6 +38,10 @@ export class TaskController extends BaseUtils {
       const task:TaskDocument = await this.taskService.create({...body, owner: {id:+req.user.userId, email: req.user.email}});
     //  const projectOfStep:StepDocument = await this.stepService.getStepById(body.step.toString())
    //   if (!task || projectOfStep.project.toString() !== task.project.toString()) this._Ex("TASK CREATION FAILED", 400, "TC-BUILD-FAILED", "/" )
+        this.uberService.emit("ADD_MANY_LOGS", 
+        {data:{message: `${task.owner.email} vous a ajouté à la tâche ${task.name}`, status: LogsStatusEnum.NEW }, 
+        arrayModel: convertArrayOfUserToModelNotif(task.members)
+      })
       return task;
     } catch (error) {
       this._catchEx(error)

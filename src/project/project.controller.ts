@@ -17,6 +17,9 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { UberService } from '@app/uber/uber.service';
 import { removeIdFromArray } from 'utils/removeObjInArray.utils';
+import { LogsModelEnum } from 'enums/logs.model.enum';
+import { convertArrayOfUserToModelNotif } from 'utils/convertArrayToModel';
+import { LogsStatusEnum } from 'enums/logs.status.enum';
 
 
 @Controller()
@@ -34,6 +37,10 @@ export class ProjectController extends BaseUtils{
     try {
       const project:ProjectDocument = await this.projectService.create({...body, code: this.__generateInvitationCode(), owner: {id:+req.user.userId, email: req.user.email}});
       if (!project) this._Ex("PROJECT CREATION FAILED", 400, "PC-BUILD-FAILED", "/" )
+      this.uberService.emit("ADD_MANY_LOGS", 
+        {data:{message: `${project.owner.email} vous a invité sur le projet ${project.name}`, status: LogsStatusEnum.NEW }, 
+        arrayModel: convertArrayOfUserToModelNotif(project.members)
+      })
       return project;
     } catch (error) {
       console.log(error)
