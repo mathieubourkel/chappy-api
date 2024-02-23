@@ -14,19 +14,23 @@ import { UpdateStepDto } from './dto/update-step.dto';
 import { StepDocument } from './step.schema';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { TaskService } from 'src/task/task.service';
+import { ProjectService } from 'src/project/project.service';
 
 
 @Controller('step')
 export class StepController extends BaseUtils {
   constructor(private readonly stepService: StepService,
-    private readonly taskService: TaskService) {
+    private readonly taskService: TaskService,
+    private readonly projectService: ProjectService) {
     super()
   }
 
   @Post()
   async create(@Body(new ValidationPipe()) body: CreateStepDto) : Promise<StepDocument> {
     try {
-      return await this.stepService.create(body);
+      const step = await this.stepService.create(body);
+      await this.projectService.pushStep(body.project, step._id)
+      return step;
     } catch (error) {
       this._catchEx(error)
     }

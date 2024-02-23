@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, forwardRef } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { ProjectController } from './project.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -9,7 +9,7 @@ import { UberModule } from '@app/uber/uber.module';
 
 @Module({
   imports:[MongooseModule.forFeature([{name: Project.name, schema: ProjectSchema}]),
-StepModule, UberModule],
+  forwardRef(() => StepModule), UberModule],
   controllers: [ProjectController],
   providers: [ProjectService],
   exports: [ProjectService]

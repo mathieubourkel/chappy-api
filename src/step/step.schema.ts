@@ -1,6 +1,6 @@
 import { Project } from '../project/project.schema';
 import { Prop, Schema, SchemaFactory, } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 import { StatusStepEnum } from '../../enums/statusStep.enum';
 import { Task } from '../task/task.schema';
 
@@ -23,8 +23,8 @@ export class Step {
   @Prop({required:true})
   estimEndDate : Date;
 
-  @Prop({ type: Types.ObjectId, ref: 'Project' })
-  project: Project | Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Project' })
+  project: Project
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Task' }] })
   tasks: Task[] | Types.ObjectId[];

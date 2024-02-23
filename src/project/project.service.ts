@@ -2,7 +2,7 @@ import { Injectable, } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { Project, ProjectDocument, } from './project.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, StringExpression, Types } from 'mongoose';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { BaseUtils } from '../../libs/base/base.utils';
 
@@ -35,7 +35,7 @@ export class ProjectService extends BaseUtils {
 
   async getProjectsByUser(id: number): Promise<ProjectDocument[]> {
     try {
-      return await this.projectModel.find({'owner.id': id}).populate('steps');
+      return await this.projectModel.find({'owner.id': id}).populate('steps').exec();
     } catch (error) {
       this._catchEx(error)
     }
@@ -43,7 +43,7 @@ export class ProjectService extends BaseUtils {
 
   async getProjectsIfMembers(id: number): Promise<ProjectDocument[]> {
     try {
-      return await this.projectModel.find({'members': { $elemMatch: { 'id': id } }});
+      return await this.projectModel.find({'members': { $elemMatch: { 'id': id } }}).populate('steps').exec();
     } catch (error) {
       this._catchEx(error)
     }
@@ -53,6 +53,15 @@ export class ProjectService extends BaseUtils {
     try {
       // @ts-ignore
       return await this.projectModel.findOneAndUpdate({ _id }, body, {new : true});
+    } catch (error) {
+      this._catchEx(error)
+    }
+  }
+
+  async pushStep(_id: Types.ObjectId, stepId: string): Promise<Partial<ProjectDocument>> {
+    try {
+      // @ts-ignore
+      return await this.projectModel.findOneAndUpdate({ _id }, {$push : { steps: stepId}});
     } catch (error) {
       this._catchEx(error)
     }
