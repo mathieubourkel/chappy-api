@@ -35,7 +35,7 @@ export class ProjectService extends BaseUtils {
 
   async getProjectsByUser(id: number): Promise<ProjectDocument[]> {
     try {
-      return await this.projectModel.find({'owner.id': id});
+      return await this.projectModel.find({'owner.id': id}).populate('steps');
     } catch (error) {
       this._catchEx(error)
     }
