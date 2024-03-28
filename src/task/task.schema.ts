@@ -31,7 +31,7 @@ export class Task {
   @Prop({type: ()=> StatusTaskEnum, required:true, default: StatusTaskEnum.IN_PROGRESS })
   status: StatusTaskEnum;
 
-  @Prop({type: ()=> CategoryTaskEnum, required:true, default: CategoryTaskEnum.NONE })
+  @Prop({type: ()=> CategoryTaskEnum, required:true, default: CategoryTaskEnum.CARPENTRY })
   category: CategoryTaskEnum;
 
   @Prop()
