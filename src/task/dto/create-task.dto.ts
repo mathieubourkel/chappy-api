@@ -22,7 +22,7 @@ export class CreateTaskDto {
   @Max(3)
   status: StatusTaskEnum;
 
-  @IsEnum(StatusTaskEnum)
+  @IsEnum(CategoryTaskEnum)
   @Max(12)
   category: CategoryTaskEnum;
 

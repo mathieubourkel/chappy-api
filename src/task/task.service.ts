@@ -81,4 +81,12 @@ export class TaskService extends BaseUtils {
       this._catchEx(error)
     }
   }
+
+  async deleteMany(searchOptions:{}) : Promise<unknown> {
+    try {
+      return await this.taskModel.deleteMany(searchOptions);
+    } catch (error) {
+      this._catchEx(error)
+    }
+  }
 }

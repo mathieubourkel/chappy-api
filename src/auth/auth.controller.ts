@@ -133,8 +133,9 @@ export class AuthController extends BaseUtils {
       try {
         const infosUser:any = await this.uberService.send('GET_USER_BYID', +req.user.userId)
         const infosProject = await this.projectService.getProjectsByUser(req.user.userId);
+        const infosParticipations = await this.projectService.getProjectsIfMembers(req.user.userId);
         infosUser.projects = infosProject
-        infosUser.participations = []
+        infosUser.participations = infosParticipations
         infosUser.myOwnTasks = []
         return infosUser;
     } catch (error) {

@@ -56,5 +56,13 @@ export class StepService extends BaseUtils {
       this._catchEx(error)
     }
   }
+
+  async deleteMany(searchOptions:{}) : Promise<unknown> {
+    try {
+      return await this.stepModel.deleteMany(searchOptions);
+    } catch (error) {
+      this._catchEx(error)
+    }
+  }
   }
 

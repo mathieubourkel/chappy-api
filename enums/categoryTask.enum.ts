@@ -1,5 +1,4 @@
 export enum CategoryTaskEnum {
-  NONE, // AUCUNE
   PLUMBING, //PLOMBERIE
   MASONRY, // MACONNERIE
   CARPENTRY, // MENUISERIE

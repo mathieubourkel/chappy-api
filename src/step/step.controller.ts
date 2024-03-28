@@ -15,6 +15,7 @@ import { StepDocument } from './step.schema';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { TaskService } from 'src/task/task.service';
 import { ProjectService } from 'src/project/project.service';
+import { TaskDocument } from 'src/task/task.schema';
 
 
 @Controller('step')
@@ -60,10 +61,11 @@ export class StepController extends BaseUtils {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string):Promise<StepDocument> {
+  async delete(@Param('id') id: string):Promise<StepDocument> {
     try {
-      const step:Promise<StepDocument> = this.stepService.delete(id);
-    if (!step) this._Ex("DELETE FAILED", 403, "SC-NO-DELETE", "/" );
+      const step:StepDocument = await this.stepService.delete(id);
+      await this.taskService.deleteMany({step:id})
+      if (!step) this._Ex("DELETE FAILED", 403, "SC-NO-DELETE", "/" );
     return step;
     } catch (error) {
       this._catchEx(error)

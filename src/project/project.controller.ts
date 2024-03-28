@@ -107,8 +107,9 @@ export class ProjectController extends BaseUtils{
   }
 
   @Delete('/project/:id')
-  delete(@Param('id') id: string):Promise<ProjectDocument> {
-    const project:Promise<ProjectDocument> = this.projectService.delete(id);
+  async delete(@Param('id') id: string):Promise<ProjectDocument> {
+    const project:ProjectDocument = await this.projectService.delete(id);
+    await this.stepService.deleteMany({project: id})
     if (!project) this._Ex("DELETE FAILED", 403, "PC-NO-DELETE", "/" );
     return project;
   } 
