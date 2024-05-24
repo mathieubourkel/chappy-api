@@ -15,7 +15,6 @@ import { StepDocument } from './step.schema';
 import { BaseUtils } from '../../libs/base/base.utils';
 import { TaskService } from 'src/task/task.service';
 import { ProjectService } from 'src/project/project.service';
-import { TaskDocument } from 'src/task/task.schema';
 
 
 @Controller('step')
@@ -29,7 +28,7 @@ export class StepController extends BaseUtils {
   @Post()
   async create(@Body(new ValidationPipe()) body: CreateStepDto) : Promise<StepDocument> {
     try {
-      const step = await this.stepService.create(body);
+      const step:any = await this.stepService.create(body);
       await this.projectService.pushStep(body.project, step._id)
       return step;
     } catch (error) {
