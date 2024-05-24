@@ -83,7 +83,7 @@ export class ProjectController extends BaseUtils{
   @Put('/project/members/delete')
   async deleteUserFromProject(@Body() body: {idProject:string, idUser:number}):Promise<ProjectDocument> {
     try {
-      const project:ProjectDocument = await this.projectService.getProjectById(body.idProject)
+      const project:any= await this.projectService.getProjectById(body.idProject)
       removeIdFromArray(project.members, body.idUser)
       await this.projectService.updateProjectMembers(project._id, project.members);
       if (!project) this._Ex("UPDATE FAILED", 400, "PC-PROJ-NOTUP", "/" )
@@ -96,7 +96,7 @@ export class ProjectController extends BaseUtils{
   @Put('/project/members/add')
   async addUserToProject(@Body() body: {idProject: string, idUser: number, email:string}):Promise<ProjectDocument> {
     try {
-      const project:ProjectDocument = await this.projectService.getProjectById(body.idProject)
+      const project:any= await this.projectService.getProjectById(body.idProject)
       project.members.push({id: body.idUser, email: body.email})
       await this.projectService.updateProjectMembers(project._id, project.members);
       if (!project) this._Ex("UPDATE FAILED", 400, "PC-PROJ-NOTUP", "/" )
