@@ -16,7 +16,7 @@ async function bootstrap() {
   } else {
     app = await NestFactory.create(AppModule);
   }
-  
+  console.log("aoaoaoa")
   const httpAdapter = app.get(HttpAdapterHost);
   app.enableCors(corsOptions);
   app.use(cookieParser());
